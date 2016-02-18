@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        ul li{
+            margin: 10px;
+            padding-top:10px ;
+            border-top: 1px solid #cfab47;
+        }
+        .h03{
+            height: 3px;
+        }
+    </style>
+</head>
+<body>
+<h1>前端如何做好诸如注册登录等的合法验证</h1>
+<ul>
+    <li>我的想法是：
+        1. 给每一个表单输入框关联一个布尔类型变量(用于表示此输入是否合法，初始值为false)，并添加一个blur事件，事件函数里用正则等方法验证，不符合则使相应提示文本显示，并将布尔值设为false，符合布尔值为true。
+        2. 然后再给form提交添加submit事件，验证每一个框的布尔值，全为true则成功，否则给一个泛泛的提示（你的输入有错误，请检查更改后重新提交！！！）
+        请教大家，这样的设计合理么？通常都是怎么做的？
+    </li>
+    <li>
+        基于用户体验来说，不适合等到submit的时候再给出提示。假如你的表单有很多个输入，用户好不容易输入完成，你再告诉他输入有误，且泛泛的提示的还不能让其知晓错在哪里
+        给出下列思路：
+        - 单个输入先触发focus，提示用户正确的输入
+        - 单个输入完成后触发blur，及时验证用户数据输入的合法性，非法则给出提示，并引导用户修改
+        - 一步步验证，最后提交
+    </li>
+    <li>
+        通常的思路都是使用Jquery Validate
+    </li>
+    <li>
+        补充一点，对于用户名，邮箱这类唯一的信息，除了前端的格式判断外
+        还需要用AJAX异步判断数据库中是否已经存在了
+    </li>
+    <li>
+        <pre>
+        贴个错误类///
+        var error = {
+        "empty" : "未输入",
+        "type"  : "输入的格式不正确",
+        "name"  : "用户名已经被注册了",
+        "phone" : "手机号码已经被注册过了",
+        "email" : "邮箱已经被注册了",
+        "same"  : "两次输入的密码不一致",
+        "sex"   : "还没有选择性别",
+        "agree" : "未同意我们的用户的协议",
+        "what"  : "未知的错误,请联系管理员",
+        "less"  : "密码至少6位",
+        "code"  : "验证码错误",
+        "more"  : "用户名最少3位，最多15位"
+        };
+        每个input框都有对应的错误提示，而且在blur时进行判断。可以设置sumbit的disabled值为true，一系列判断符合要求后再设为false防止提交空form
+        </pre>
+    </li>
+</ul>
+<div style="border: 2px solid lightcoral;width: 80%;height: 300px;margin: 0 auto;padding:10px">
+    <h2>注册</h2>
+    <fieldset>
+        <legend>注册模块</legend>
+        <form name="regForm" method="post" onsubmit="inputCheck(this)">
+            <label>用户名：</label><input type="text" name="username" class="input" placeholder="至少6位"/><span>(必填，3-15
+            字符长度，支持汉字、字母、数字及_)</span>
+            <div class="h03"></div>
+            <label>密码：</label><input type="password" name="password"class="input"
+                                     placeholder="数字、大写、小写字母、符号"><span>(必填，3-15
+            字符长度，支持汉字、字母、数字及_)</span>
+            <div class="h03"></div>
+            <label>重复密码：</label><input type="password" name="repass" class="input"
+                                       placeholder="数字、大写、小写字母、符号"><span>(必填，3-15
+            字符长度，支持汉字、字母、数字及_)</span>
+            <div class="h03"></div>
+            <label>email:</label><input type="email" name="email" class="input" placeholder="格式：22@22.com"><span>(必填，3-15
+            字符长度，支持汉字、字母、数字及_)</span>
+            <div class="h03"></div>
+            <input type="reset" value="重置">
+            <input type="submit" value="提交">
+        </form>
+    </fieldset>
+</div>
+
+<script>
+    function inputCheck(regForm){
+        if(regForm.username.value==""){
+            alert("用户名不能为空");
+            regForm.username.focus();
+        }
+        if (regForm.password.value == "")
+        {
+            alert("必须设定登录密码!");
+            regForm.password.focus();
+        }
+        if (regForm.repass.value != regForm.password.value)
+        {
+            alert("两次密码不一致!");
+            regForm.repass.focus();
+        }
+        if (regForm.email.value == "")
+        {
+            alert("电子邮箱不可为空!");
+            RegForm.email.focus();
+        }
+    }
+</script>
+
+<div>
+    <span style="white-space:pre">	</span>
+    <form action="userRegister.action" method="post" onsubmit="return register();">
+    <h3>用户注册</h3>
+    <table>
+        <tr>
+            <td style="text-align: right;width: 200px;line-height: 50px;">用 户 名<font
+                    color="red">*</font>：
+            </td>
+            <td><input type="text" name="user.username"
+                       onblur="return checkname()" id="uName"
+                       style="width: 220px;font-size: 16px;" /></td>
+            <td id="namets"
+                style="width: 150px;height:40px;text-align: left;font-size: 12px;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;line-height: 50px;">密    码<font
+                    color="red">*</font>：
+            </td>
+            <td><input type="password" id="uPass" name="user.password"
+                       onblur="return checkpass();"
+                       style="width: 220px;font-size: 16px;" /></td>
+            <td id="passts"
+                style="width: 150px;text-align: left;font-size: 12px;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;line-height: 50px;">确认密码<font
+                    color="red">*</font>：
+            </td>
+            <td><input type="password" name="" id="uRPass"
+                       onblur="return checkrpass();"
+                       style="width: 220px;font-size: 16px;" /></td>
+            <td id="passrts"
+                style="width: 150px;text-align: left;font-size: 12px;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;line-height: 50px;">邮    箱<font
+                    color="red">*</font>：
+            </td>
+            <td><input type="text" name="user.email" id="uEmail"
+                       onblur="return checkemail();"
+                       style="width: 220px;font-size: 16px;" /></td>
+            <td id="emailts"
+                style="width: 150px;text-align: left;font-size: 12px;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center;line-height: 55px;width:220px"><input
+                    type="submit" value="注册"
+                    style="width: 60px;font-size: 16px;" />         <input
+                    type="reset" value="重置"
+                    style="width: 60px;font-size: 16px;" /></td>
+        </tr>
+    </table>
+</form>
+    <script>
+        function register() {
+          if(!checkname()){
+            return false;
+          }else if (!checkpass()) {
+            return false;
+          } else if(!checkemail()){
+            return false;
+          }
+          return true;
+        }
+        function checkname()
+        {
+            var name = document.getElementById("uName").value;
+            var ts = document.getElementById("namets");
+            if(name.length<3|| name.length>15)
+            {
+                ts.innerHTML ="用户名长度须在3-15之间!";
+                ts.style.color="red";
+                return false;
+            }
+            $.post("checkUserName.action", {" userName": name },function(data){
+                var d = $.parseJSON(data);
+                //console.log(d.success);
+                if(d.success!=true){
+                    ts.innerHTML ='用户名已存在!';
+                    ts.style.color='red';
+                    return true;
+                }
+            });
+            ts.innerHTML ='用户名可以使用！';
+            ts.style.color='green';
+            return true;
+        }
+        function checkpass(){
+            var userPass = $("#uPass").val();
+
+            var pts = document.getElementById("passts");
+
+            if(userPass.length<6 || userPass.length >15)
+            {
+                pts.innerHTML ="密码长度须在6-15之间!";
+                pts.style.color="red";
+                return false;
+            }
+            pts.innerHTML ="密码可以使用!";
+            pts.style.color="green";
+            return true;
+        }
+        function checkrpass(){
+            var userPass = $("#uPass").val();
+            var userRPass = $("#uRPass").val();
+            var prts =  document.getElementById("passrts");
+            if (userPass != userRPass) {
+                prts.innerHTML="两次密码输入不一致!";
+                prts.style.color="red";
+                return false;
+            }
+            prts.innerHTML ="输入一致!";
+            prts.style.color="green";
+            return true;
+        }
+        function checkemail(){
+            var userEmail = $("#uEmail").val();
+            var ets = document.getElementById("emailts");
+            if(!isEmail(userEmail)){
+                ets.innerHTML ="邮箱格式不正确!";
+                ets.style.color="red";
+                return false;
+            }
+            ets.innerHTML ="邮箱可以使用!";
+            ets.style.color="green";
+            return true;
+        }
+        function isEmail(str){
+            var reg = /[a-z0-9-]{1,30}@[a-z0-9-]{1,65}.[a-z]{3}/;
+            return reg.test(str);
+        }
+        </script>
+    <form action="userLogin.action" method="post" onsubmit="return login();" id="loginForm">
+        <h3>用户登录</h3>
+        <br> 用 户 名：<input type="text" name="user.username" id="usName" style="height: 30px;width: 220px;font-size:
+        20px;"><br>
+        <br> 密    码：<input type="password" name="user.password" id="usPass"
+                           style="height: 30px;width: 220px;font-size: 20px;"><br>
+        <br> <input type="submit" value="登录" style="height: 30px;width: 60px;font-size: 20px;">
+        <input type="reset" value="重置" style="height: 30px;width: 60px;font-size: 20px;">
+    </form>
+    <script>
+        function login() {
+            // console.info("点击了登录");
+            var userName = $("#usName").val();
+            // console.info(userName)
+            var userPass = $("#usPass").val();
+            // console.info(userPass);
+            if (userName == "" || userName == null) {
+                alert("用户名不能为空");
+                return false;
+            } else if (userPass == "" || userPass == null) {
+                alert("密码不能为空");
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+</div>
+
+<SCRIPT language="JavaScript">
+    <!--
+    function checkreg()
+    {
+        if (document.form1.User.value=="")
+        {
+            alert("请输入您的用户名!");
+            form1.User.focus();
+            return false;
+        }
+        if (document.form1.User.value.length<4 || document.form1.User.value.length>15)
+        {
+            alert("用户名长度限制在4-15位!");
+            form1.User.focus();
+            return false;
+        }
+        if (document.form1.Pwd.value=="")
+        {
+            alert("请输入密码!");
+            form1.Pwd.focus();
+            return false;
+        }
+        if (document.form1.Pwd.value.length<6 || document.form1.Pwd.value.length>15)
+        {
+            alert("密码长度限制在6-15位!");
+            form1.Pwd.focus();
+            return false;
+        }
+        if(document.form1.Pwd.value!=document.form1.Pwdagain.value)
+        {
+            alert("两次输入的密码不同!")
+            form1.Pwd.focus();
+            return false;
+        }
+        if (document.form1.Qq.value=="")
+        {
+            alert("请输入您的QQ号码!");
+            form1.Qq.focus();
+            return false;
+        }
+        if (document.form1.Qq.value.length>10 || document.form1.Qq.value.length<4)
+        {
+            alert("QQ长度应该在4-10位之间!");
+            form1.Qq.focus();
+            return false;
+        }
+        if (document.form1.Email.value=="")
+        {
+            alert("请输入您的Email地址!");
+            form1.Email.focus();
+            return false;
+        }
+        var myRegex = /@.*\.[a-z]{2,6}/;
+        var email = form1.Email.value;
+        email = email.replace(/^ | $/g,"");
+        email = email.replace(/^\.*|\.*$/g,"");
+        email = email.toLowerCase();
+
+        //验证电子邮件的有效性
+        if (email == "" || !myRegex.test(email))
+        {
+            alert ("请输入有效的E-MAIL!");
+            form1.Email.focus();
+            return false;
+        }
+        return true;
+    }
+    function Isval(val,name)
+    {
+        if (val.value!='' && (isNaN(val.value) || val.value==0))
+        {
+            alert(name+"应填数字！");
+            val.value="";
+            val.focus();
+        }
+    }
+    //-->
+</SCRIPT>
+<form name="form1"  onsubmit="return checkreg()" method="post" action="regdo.asp"  >
+    <table width="372" height="89" border="0" cellpadding="0" cellspacing="0" bordercolor="#0000FF" align="center">
+        <tr>
+            <td width="127" height="32">用户名:</td>
+            <td width="122"><label>
+                <input type="text" name="username" id="User"/>
+            </label>
+        </tr>
+        <tr>
+            <td height="27">密码:</td>
+            <td height="27" colspan="2"><input type="password" name="pass" id="Pwd"></td>
+        </tr>
+        <tr>
+            <td height="27">确认密码:</td>
+            <td height="27" colspan="2"><input type="password" name="passagain" id="Pwdagain"></td>
+        </tr>
+        <tr>
+            <td height="27">QQ:</td>
+            <td height="27" colspan="2"><input type="text" name="qq" id="Qq" onblur="Isval(Qq,'QQ')"></td>
+        </tr>
+        <tr>
+            <td height="27">E-mail:</td>
+            <td height="27" colspan="2"><input type="text" name="email" id="Email"></td>
+        </tr>
+        <tr>
+            <td>
+            <input type="submit" name="Submit" value="提交" />
+        </td>
+            <td colspan="2">
+                <input type="reset" name="Reset" value="重置" /> </td>
+        </tr> </table>
+</form>
+</body>
+</html>

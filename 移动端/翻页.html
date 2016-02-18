@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Document</title>
+    <style type="text/css">
+        *{margin: 0;padding: 0;}
+        html,body{position: relative;width: 100%;height: 100%;overflow: hidden;}
+        .con{position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
+        .red,.blue,.black,.yellow{width: 100%;height: 100%;font-size: 32px;}
+        .red{background: red;}
+        .blue{background: blue;}
+        .black{background: black;}
+        .yellow{background: yellow;}
+    </style>
+</head>
+<body>
+<div class="con" id="con">
+    <div class="red">ONE</div>
+    <div class="blue">TWO</div>
+    <div class="black">THREE</div>
+    <div class="yellow">FOUR</div>
+</div>
+<script type="text/javascript" src='http://s.thsi.cn/js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript">
+    var  con = document.getElementById('con');  //获取对象元素
+    var startY, moveY, endY , orginTop , lastY ; //全局变量
+    con.addEventListener('touchstart' , function(event) {  //触摸开始事件绑定函数
+        //addEventListener()含有三个参数，一个是事件名称，另一个是事件执行的函数，最后一个是事件捕获
+        event.preventDefault();//取消事件的默认动作。将通知 Web 浏览器不要执行与事件关联的默认动作（如果存在这样的动作）
+        startY = event.targetTouches[0].pageY;//手指触摸点的时间
+        orginTop = parseFloat(getComputedStyle( this , null).top);
+    }, false);
+    con.addEventListener('touchmove' , function(event) { //触摸移动事件绑定函数
+        event.preventDefault();
+        this.style.top = orginTop + event.targetTouches[0].pageY - startY + "px";
+        endY = event.targetTouches[0].pageY - startY;
+    }, false);
+    con.addEventListener('touchend' , function(event) { //触摸停止事件绑定函数
+        event.preventDefault();
+        var a = parseFloat(getComputedStyle( this , null).top) % document.body.offsetHeight;
+        if ( Math.abs(a) < document.body.offsetHeight/2 ) {
+            lastY = parseFloat(getComputedStyle( this , null).top) - a ;
+        } else {
+            lastY = parseFloat(getComputedStyle( this , null).top) - document.body.offsetHeight - a;
+        }
+        if ( parseFloat(getComputedStyle( this , null).top) > 0 ) {
+            lastY = 0;
+        } else if ( parseFloat(getComputedStyle( this , null).top) < -3 * document.body.offsetHeight) {
+            lastY = -3 * document.body.offsetHeight;
+        }
+        $(this).animate({top : lastY},300);
+    }, false);
+</script>
+</body>
+</html>

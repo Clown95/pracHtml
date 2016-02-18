@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        /*hack*/
+        html,body{
+            margin:0;
+            padding: 0;
+        }
+        div{
+            cursor: pointer;
+        }
+        .go-top{
+            /*display: none;*/
+        }
+    </style>
+</head>
+<body>
+    <div style="height: 2000px;background: lightblue">除了用display:none外；
+        <br/>way2:用js判断网页距离窗口上方的距离，判断上卷的距离，scrollTop。<br/>
+        <em>遇到问题：scrollTop（）和scrollTop的正确使用；以及document.body和$(document.body)的区别</em>
+    </div>
+    <div class="go-top" style="position: fixed; right: 10px;bottom: 10px;">回顶部</div>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script>
+    $(function(){
+        if(document.body.scrollTop<10){
+//            alert($(document.body).scrollTop());
+//            alert(document.body.scrollTop);
+            $('.go-top').hide();
+        }
+        $(window).scroll(function () {
+            if($(window).scrollTop()>=100) {
+                $(".go-top").fadeIn();
+            }else {
+                $(".go-top").fadeOut();
+            }
+        });
+
+
+        $(".go-top").click(function(event){
+            $('html,body').animate({
+                scrollTop:0,
+                margin:20
+
+            }, 200 );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
+/*总结：okao,可能是昨天没有注意，今天查看的时候发现，页面刚刚加载的时候，回到顶部的标签是显示。然而需求是不需要显示。纠结了大概一个小时复杂思维。后面发现：display：none就可以啦！*/

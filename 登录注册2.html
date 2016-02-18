@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+        <title>JS日积月累001 - rows 和 cells的使用</title>
+        <script type="text/javascript">
+            function validForm(curForm, bodyName){
+                var bodyObj = document.getElementById(bodyName);
+                var rowObj = null;
+                var cellObj = null;
+
+                if (bodyObj == null){
+                    return false;
+                }
+
+                // 引用rows rows就是表示表格table tbody中的tr行    cells表示th或td列
+                for (var i = 0; i < bodyObj.rows.length; i ++){
+                    rowObj = bodyObj.rows[i];
+
+                    // 带*的必须输入，引用cells
+                    if (rowObj.cells[0].innerText.indexOf("*") >0){
+                        if (rowObj.cells[1].childNodes[0].value == ""){
+                            alert(rowObj.cells[0].innerText.replace(" * :", "") + "不能为空！"+"\n输出星号的位置为："+rowObj.cells[0].innerText.indexOf("*") );
+                            return false;
+                        }
+                    }
+                }
+
+                alert("Pass 通过");
+                //curForm.submit();
+            }
+        </script>
+    </head>
+    <body>
+    <p style="color: red;height: 30px">使用了indexOf()来获取特定值得位置，该函数返回的是该值第一次出现时的位置。初始值为0</p>
+    <form action="" method="post" name="loginFrm">
+        <table>
+            <tbody id="validBody">
+            <tr>
+                <td align="right"> 用户名 <font color="red">*</font> :</td>
+                <td><input type="text" name="username" /></td>
+            </tr>
+            <tr>
+                <td align="right">密码 <font color="red">*</font> :</td>
+                <td><input type="password" name="username" /></td>
+            </tr>
+            <tr>
+                <td align="right">子系统 <font color="red">*</font> :</td>
+                <td>
+                    <select name="systemname">
+                        <option value="">---请选择---</option>
+                        <option value="HR">人力资源系统</option>
+                        <option value="PUR">采购系统</option>
+                        <option value="SAL">销售系统</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td colspan="2">
+                    <input type="button" value="提交" name="submit" onclick="validForm(this.form, 'validBody')"/>
+                    <input type="reset" value="Reset" name="reset"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+    </body>
+    </html>

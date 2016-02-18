@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>分页函数</title>
+</head>
+<body>
+<table class="base_table" id="tbSeatList">
+    <thead>
+        <tr>
+        <th>
+            航空公司
+        </th>
+        <th>
+            航线
+        </th>
+        <th>
+            价格
+        </th>
+
+        <th>
+            航班日期
+        </th>
+        <th>
+            放位时间
+        </th>
+        <th>
+            航班号
+        </th>
+        <th>
+
+            放位数量
+        </th>
+        <th>
+            记录编号
+        </th>
+        <th>
+            操作
+        </th>
+    </tr>
+    </thead>
+    <tbody id="bodyPaging">
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        </td>
+        <td>
+            上海
+            →
+            成都
+        </td>
+        <td>
+
+            <span class="base_price"><dfn>¥</dfn>400</span>
+        </td>
+        <td>
+            2012-07-09
+        </td>
+        <td>
+            2012-06-26 13:25
+        </td>
+        <td>
+
+            MU3333
+        </td>
+        <td>
+            3
+        </td>
+        <td>
+            EFGDE
+        </td>
+        <td>
+            <a target="_blank" href="">
+
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+            上海
+            →
+            成都
+        </td>
+
+        <td>
+            <span class="base_price"><dfn>¥</dfn>400</span>
+        </td>
+        <td>
+            2012-07-12
+        </td>
+        <td>
+            2012-06-26 13:23
+        </td>
+
+        <td>
+            MU2345
+        </td>
+        <td>
+            2
+        </td>
+        <td>
+            PNR012
+        </td>
+        <td>
+
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+
+            乌鲁木齐
+            →
+            哈尔滨
+        </td>
+        <td>
+            <span class="base_price"><dfn>¥</dfn>360</span>
+        </td>
+        <td>
+            2012-07-25
+        </td>
+        <td>
+
+            2012-06-26 11:28
+        </td>
+        <td>
+            mu0725
+        </td>
+        <td>
+            3
+        </td>
+        <td>
+            123
+        </td>
+
+        <td>
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+
+        <td>
+            乌鲁木齐
+            →
+            哈尔滨
+        </td>
+        <td>
+            <span class="base_price"><dfn>¥</dfn>360</span>
+        </td>
+        <td>
+            2012-07-03
+        </td>
+
+        <td>
+            2012-06-26 11:06
+        </td>
+        <td>
+            mu0703
+        </td>
+        <td>
+            2
+        </td>
+        <td>
+
+            12
+        </td>
+        <td>
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+            北京
+            →
+            上海
+        </td>
+        <td>
+            <span class="base_price"><dfn>¥</dfn>339</span>
+
+        </td>
+        <td>
+            2012-07-12
+        </td>
+        <td>
+            2012-06-26 13:28
+        </td>
+        <td>
+            MU8888
+        </td>
+
+        <td>
+            2
+        </td>
+        <td>
+            GBDDEE
+        </td>
+        <td>
+            <a target="_blank" href="">
+                查看</a>
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+            上海
+            →
+            成都
+        </td>
+        <td>
+
+            <span class="base_price"><dfn>¥</dfn>400</span>
+        </td>
+        <td>
+            2012-07-09
+        </td>
+        <td>
+            2012-06-26 13:25
+        </td>
+        <td>
+
+            MU3333
+        </td>
+        <td>
+            3
+        </td>
+        <td>
+            EFGDE
+        </td>
+        <td>
+            <a target="_blank" href="">
+
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+            上海
+            →
+            成都
+        </td>
+
+        <td>
+            <span class="base_price"><dfn>¥</dfn>400</span>
+        </td>
+        <td>
+            2012-07-12
+        </td>
+        <td>
+            2012-06-26 13:23
+        </td>
+
+        <td>
+            MU2345
+        </td>
+        <td>
+            2
+        </td>
+        <td>
+            PNR012
+        </td>
+        <td>
+
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+        <td>
+
+            乌鲁木齐
+            →
+            哈尔滨
+        </td>
+        <td>
+            <span class="base_price"><dfn>¥</dfn>360</span>
+        </td>
+        <td>
+            2012-07-25
+        </td>
+        <td>
+
+            2012-06-26 11:28
+        </td>
+        <td>
+            mu0725
+        </td>
+        <td>
+            3
+        </td>
+        <td>
+            123
+        </td>
+
+        <td>
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            中国东方航空公司
+        </td>
+
+        <td>
+            乌鲁木齐
+            →
+            哈尔滨
+        </td>
+        <td>
+            <span class="base_price"><dfn>¥</dfn>360</span>
+        </td>
+        <td>
+            2012-07-03
+        </td>
+
+        <td>
+            2012-06-26 11:06
+        </td>
+        <td>
+            mu0703
+        </td>
+        <td>
+            2
+        </td>
+        <td>
+
+            12
+        </td>
+        <td>
+            <a target="_blank" href="">
+                查看</a>
+        </td>
+    </tr>
+    <tr><td>niha</td></tr>
+    </tbody>
+</table>
+
+<br/>
+<div class="base_count">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <a onclick="prePage();">上一页</a>
+            </td>
+            <td style="width: 100px;text-align: center">
+                <span id="pageindex" style="font-weight: bold;color: #ff0000"></span>
+            </td>
+            <td>
+                <a  onclick="nextPage();" >下一页</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+<script type="text/javascript" src="js/page.js"></script>
+<script type="text/javascript" language="javascript">
+    var page;
+    window.onload = function () {
+        if (document.getElementById('tbSeatList')) {
+            page = new PagingClass(5, 'tbSeatList', 'bodyPaging');
+            document.getElementById('pageindex').innerHTML = page.pageIndex + 1 + ' / ' + page.pageCount;
+        }
+    };
+
+    function nextPage() {
+        page.nextPage();
+        document.getElementById('pageindex').innerHTML = page.pageIndex + 1 + ' / ' + page.pageCount;
+    }
+
+    function prePage() {
+        page.prePage();
+        document.getElementById('pageindex').innerHTML = page.pageIndex + 1 + ' / ' + page.pageCount;
+    }
+</script>
+<style type="text/css">
+    .base_table,.base_table thead,.base_table thead tr,.base_count{
+        width: 90%;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .base_table{
+        margin-top: 20px;
+        border: double 2px #1b315e;
+        padding: 6px;
+    }
+    .base_table thead th,.base_table tbody td{
+        min-width:10%;
+        border: dotted 2px darkgray;
+        padding: 8px;
+    }
+    .base_count table{
+        margin: 10px auto;
+    }
+
+    a{
+        cursor: pointer;
+        color: #1b315e;
+    }
+</style>
+</html>

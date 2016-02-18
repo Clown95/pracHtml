@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+<HEAD>
+    <TITLE>支付宝的控制台菜单</TITLE>
+    <META http-equiv=Content-Type content="text/html; charset=utf-8">
+    <STYLE type="text/css">
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}
+        table{border-collapse:collapse;border-spacing:0;}
+        fieldset,img{border:0;}
+        body{font-size:12px;}
+        #MyMenu{ margin: 10px auto; width: 760px;background: url(images/Account_Title_BgC.gif) repeat-x; height: 36px;}
+        .MyMenubg{background: url(images/Account_Title_Bg.gif) no-repeat;}
+        #QuickMenu{background: url(images/Account_Title_Bg.gif) no-repeat right -36px;text-align:left;}
+        #QuickMenu a{font-size:12px;color:#003599;text-decoration:none;}
+        #QuickMenu a:hover,#QuickMenu a:active{color:#FF6B00;}
+        #QuickMenu span a.cc:hover ,#QuickMenu a.cc:active span{background: url(images/MyMenu_bg_on.gif) no-repeat 0px 6px;}
+        #QuickMenu span a.cc {cursor:pointer;display:block;background: url(images/MyMenu_bg.gif) no-repeat 0px 6px;margin:0px 0px 0px 10px;width:154px;height:23px;padding:11px 5px 0px 25px;}
+        #MyMenuLinks{border:1px solid #FE7E25;background:#FCD5AA;padding:3px;text-align:left;top:-3px;left:20px;width:240px;float:left;}
+        #MyMenuLinks *{margin:0px;padding:0px;line-height:20px;}
+        #MyMenuLinks li {color:#003599;font-weight:bold;float:left;width:208px;padding-bottom:15px;}
+        #MyMenuLinks li.home a{display:block;border:1px solid #FFBD80;background:#FCF6DC url(images/MyMenu_home.gif) no-repeat 45px 5px;text-align:center;font-weight:normal;}
+        #MyMenuLinks ul{clear:left;list-style:none;border:1px solid #FBDDB9;background:#FFF;width:208px;padding:15px 15px 0px 15px;float:left;}
+        #MyMenuLinks ul ul{border:1px solid #FFF;background:#FFF;width:200px;padding:0px;}
+        #MyMenuLinks li li{font-weight:normal;width:90px;background:url(images/MyMenu_Li_bg.gif) no-repeat 0px 6px;padding:0px 0px 0px 10px;}
+        #all-links, #flying{display:none;margin-left:-35px;position:absolute;left:0;top:30px;}
+        #flying{background:#fff;border:1px dashed #ccc;top:0;}
+        #enter{position: relative;width:184px;}
+    </STYLE>
+</HEAD>
+<BODY>
+<DIV id=MyMenu>
+    <DIV class=MyMenubg>
+        <DIV id=QuickMenu>
+            <div id="enter">
+                <span><A id=cc href="#" class="cc">支付宝快速入口</A></span>
+                <div id="flying"></div>
+                <DIV id=all-links style="display:none;">
+                    <DIV id=MyMenuLinks>
+                        <UL>
+                            <LI class=home><A class=R href="#">我的支付宝首页</A> </LI>
+                            <LI>账户管理
+                                <UL>
+                                    <LI><A href="#">账户余额查询</A> </LI>
+                                    <LI><A href="#">账户信息管理</A> </LI>
+                                    <LI><A href="#">支付宝卡通</A> </LI>
+                                </UL>
+                            </LI>
+                            <LI>资金管理
+                                <UL>
+                                    <LI><A href="#">充值</A> </LI>
+                                    <LI><A href="#">提现</A> </LI>
+                                    <LI><A href="#">账户明细查询</A> </LI>
+                                    <LI><A href="#">提现申请查询</A> </LI>
+                                </UL>
+                            </LI>
+                            <LI>增值服务
+                                <UL>
+                                    <LI><A href="#">安全中心</A> </LI>
+                                    <LI><A href="#">手机服务</A> </LI>
+                                    <LI><A href="#">信使</A> </LI>
+                                    <LI><A href="#">产品中心</A> </LI>
+                                </UL>
+                            </LI>
+                        </UL>
+                    </DIV>
+                </DIV>
+            </div>
+        </DIV>
+    </DIV>
+</DIV>
+<script type="text/javascript">
+    var $ = function(id){
+        return typeof id == 'string' ? document.getElementById(id) : id;
+    }
+    var flying = function(obj, w, h, callback){
+        var d = 10;
+        var index = 0;
+        var extend = 50;
+        var step = {width:(w+extend)/d, height:(h+extend)/d, top:30/d};
+        var only;
+        clearInterval(only);
+        obj.style.display = 'block';
+        only = setInterval(
+                function(){
+                    index++;
+                    obj.style.width = ( index * step.width) + 'px';
+                    obj.style.height = ( index * step.height) + 'px';
+                    obj.style.top = ( index * step.top) + 'px';
+                    obj.style.marginLeft = ( 0 - (index * step.width - 150))/2 + 'px';
+                    if(index > d){
+                        clearInterval(only);
+                        if(typeof callback == 'function') callback(obj);
+                    }
+                }
+                ,10);
+    }
+    var timer;
+    $('enter').onmouseover = function(){
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            if($('all-links').style.display == 'none'){
+                new flying($('flying'), 248, 293, function(obj){
+                    $('all-links').style.display = 'block';
+                    obj.style.display = 'none';
+                });
+                document.title = 'over--'+Math.random();
+            }
+        },200);
+    }
+    $('enter').onmouseout = function(){
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            $('all-links').style.display = 'none';
+            document.title = 'out--'+Math.random();
+        },200);
+    }
+</script>
+</BODY>
+</html>

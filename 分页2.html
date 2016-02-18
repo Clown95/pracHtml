@@ -1,0 +1,75 @@
+<!--没有实现-->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>分页</title>
+    <script>
+        var page = new Page(100,'tableList','group_one');
+    </script>
+    <script type="text/javascript" src="js/page2.js"></script>
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            padding: 2px;
+        }
+        table thead tr.TitleTr{
+            background: #ff706d;
+            color: white;
+        }
+        table thead tr td,tbody tr td{
+            padding: 8px;
+            text-align: center;
+        }
+        a{
+            cursor: pointer;
+            color: #1b315e;
+        }
+    </style>
+</head>
+<body>
+<table cellpadding="0" cellspacing="0" border="1" bordercolorlight="#f00"
+       bordercolordark="#eee" id='tableList'>
+    <thead>
+        <tr class="TitleTr">
+            <td align="center" class="white_text" nowrap>公务卡号</td>
+            <td align="center" class="white_text" nowrap>持卡人</td>
+            <td align="center" class="white_text" nowrap>状态</td>
+        </tr>
+    </thead>
+    <tbody id="group_one">
+        <%
+        for(int i=0; i; i++) {
+                CardInfoBean bean=(CardInfoBean)allList.get(i);
+                %>
+            <tr>
+                <td align="left" nowrap>
+                    <%=bean.getCard_id() %>
+                </td>
+                <td align="left" nowrap>
+                    <%=bean.getOwner() %>
+                </td>
+                <td align="center" nowrap>
+                    <%=bean.getStatus() %>
+                </td>
+            </tr>
+            <%
+            }
+            %>
+    </tbody>
+</table>
+<table cellpadding="0" cellspacing="0" border="1">
+    <tr>
+        <td colspan="3">
+            <span>总共：<%=totalSize%>条记录</span>&nbsp;&nbsp;<span>每页显示100条</span>&nbsp;&nbsp;
+            <a onclick="page.firstPage();">首页</a>
+            <a onclick="page.prePage();">上一页</a>
+            <a onclick="page.nextPage();">下一页</a>
+            <a onclick="page.lastPage();">尾页</a>
+            <span id="pageindex"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<script language="javascript">
+    var i=0;
+    var timer1;
+
+    function doPrint() {
+//bdhtml=window.document.body.innerHTML;
+//sprnstr="<!--startprint-->";
+//eprnstr="<!--endprint-->";
+//prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+//prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));
+//window.document.body.innerHTML=prnhtml;
+        window.print();
+// window.document.body.innerHTML=bdhtml;
+
+
+    }
+
+    function init(){
+
+        x=Math.random();
+        x=Math.floor(x*100000000);
+        if(x<9999999){
+            init();
+        }else{
+            i++;
+            document.all.show.innerText=x;
+            if(i==20){
+                var par=document.getElementById("mybutton");
+                var son_tr=document.createElement("TR");
+                var son_td=document.createElement("TD");
+//列属性
+                son_td.colSpan="4";
+                son_td.setAttribute("align","center");
+                son_td.setAttribute("className","b_table_db1");
+//生成密码属性
+                var input_type=document.createElement("INPUT");
+                input_type.type="button";
+                input_type.name="createCode";
+                input_type.value="确认密码";
+                input_type.onclick=save_onclick;
+                input_type.setAttribute("className","button");
+                input_type.onFocus="this.blur();";
+                input_type.onmouseover='this.className="buttonY";';
+                input_type.onmouseout='this.className="button"';
+//打印属性
+                var input_type2=document.createElement("INPUT");
+                input_type2.type="button";
+                input_type2.name="printButton";
+                input_type2.value="打印";
+                input_type2.onclick=doPrint;
+                input_type2.setAttribute("className","button");
+                input_type2.onFocus="this.blur();";
+                input_type2.onmouseover='this.className="buttonY";';
+                input_type2.onmouseout='this.className="button"';
+
+
+                son_td.appendChild(input_type);
+                son_td.appendChild(input_type2);
+                son_tr.appendChild(son_td);
+                par.appendChild(son_tr);
+            }
+
+            if(i<20){
+                timer1=setTimeout("init()",50);
+            }
+
+        }
+
+    }
+    //确认密码
+    function save_onclick(){
+        alert("确认密码");
+    }
+</script>
+<html>
+<meta charset="UTF-8">
+<head><title></title></head>
+<body>
+<table>
+    <tr>
+        <td id="show"></td>
+    </tr>
+    <tbody id="mybutton"></tbody>
+</table>
+</body>
+<script language="javascript">
+    init();
+</script>
+</html>

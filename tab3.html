@@ -1,0 +1,97 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>js封装一个tab效果</title>
+    <style type="text/css">
+        *{ margin:0; padding:0;}
+        body { font:12px/1.8 Arial; color:#666;}
+        h1.tit-h1 { font-size:38px; text-align:center; margin:30px 0 15px; color:#f60;}
+        .go-back{ text-align:center; border-top:1px dashed #ccc; padding:10px; margin-top:20px; font-size:40px;}
+        li{ list-style:none;}
+        .wrapper { width:500px; border:1px solid #e6e6e6;  margin:0 auto; padding:50px;}
+
+
+        /*--=tabPanel--*/
+        #tab{border:1px solid #ccc;}
+        #tab .tab-bd{border-top:none;margin:0 auto;padding:10px;text-align:left;height:120px;position:relative}
+        .tab-nav{margin:0 auto;padding:0;background:#eee;height:26px;}
+        .tab-nav li{display:inline;list-style:none outside none;width:90px;height:26px;float:left;line-height:26px;text-align:center;}
+        .tab-nav li a{color:#555;display:inline-block}
+        .tab-nav li a:hover,.tab-nav li.hover a{text-decoration:none;background:#fff;color:#000;display:block; }
+        .hidden{display:none}
+    </style>
+    <script type="text/javascript">
+        function tabPanel(param){
+            var defaultIndex=param["default"]||0,//设置显示的页面
+                    panelobj=param["panel"],//设置tab容器
+                    defalutClass=param["defalutStyle"]||"",//设置tab菜单项的普通样式
+                    hoverClass=param["hoverStyle"]||"hover",//设置鼠标移到tab菜单项的样式
+                    currentIndex=defaultIndex,
+                    menus=_$(panelobj).getElementsByTagName("ul")[0].getElementsByTagName("li"),
+                    contents=_$(panelobj).getElementsByTagName("ul")[1].getElementsByTagName("li"),
+                    menuNumber=menus.length,
+                    hidden="hidden";
+            for(var i=0;i<menuNumber;i++){
+                _setClass(contents[0],hoverClass);
+                _setClass(contents[i],hidden);
+                _setClass(menus[i],defalutClass);
+                (function(i){
+                    menus[i].onmouseover=function(){
+                        var old=menus[currentIndex];
+                        _setClass(old,defalutClass);
+                        _setClass(contents[currentIndex],hidden);
+                        var cur=menus[i];
+                        _setClass(cur,hoverClass);
+                        currentIndex=i;
+                        _setClass(contents[i],"");
+                    };
+                })(i);
+            }
+            _setClass(menus[currentIndex],hoverClass);
+            _setClass(contents[currentIndex],"");
+            //便利函数
+            function _setClass(obj,className){obj.className=className}
+            function _$(oid){return typeof(oid) == "string"?document.getElementById(oid):oid}
+        }
+    </script>
+<body>
+<h1 class="tit-h1">js封装一个tab效果_前端开发</h1>
+<div class="wrapper">
+
+
+
+
+    <div id="tab">
+        <!-- tabHead -->
+        <ul class="tab-nav">
+            <li><a href="javascript:void(0)">交易安全</a></li>
+            <li><a href="javascript:void(0)">淘宝大学</a></li>
+            <li><a href="javascript:void(0)">爱心</a></li>
+        </ul>
+
+        <!-- tabPanel-->
+        <ul class="tab-bd">
+            <li>
+                1111
+            </li>
+            <li>
+                222
+            </li>
+            <li>
+                333
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        tabPanel({"panel":"tab"});//panel为必填项，default、defalutStyle、hoverStyle为选填项
+    </script>
+
+
+
+
+</div>
+
+
+</body>
+</html>

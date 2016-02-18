@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>加减乘除各种运算</title>
+</head>
+<body>
+<h1>加减乘除各种运算</h1>
+<br>
+<form>
+    <label>
+        <input id="do1" type="text" name="加数" value="0"/>
+    </label>
+    <span id="plus">+</span>
+    <label>
+        <input id="do2" type="text" name="被加数" value="0"/>
+    </label>
+    <button id="do">=</button>
+    <label>
+        <input id="result" type="text" name="结果"/>
+    </label>
+</form>
+<script>
+    var done=document.getElementById("do");
+    var do1=document.getElementById("do1").value;
+    var do2=document.getElementById("do2").value;
+    var result=document.getElementById("result");
+
+    done.click=function get(){
+        result.value=do1+do2;
+    }
+</script>
+
+
+</body>
+</html>

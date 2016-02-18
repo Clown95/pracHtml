@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+        <Meta name='Gemeratpr' content='网络程序员伴侣(Lshdic)2005'>
+        <TITLE>神魔对决3(暂定名,神魔对决2续作) - 前期开发工程,业余时间搞搞而已~</TITLE>
+    </HEAD><BODY topmargin='2' leftmargin='2'> <p> <p> <p>
+    <center style="font-size:40;color:Red">本人无敌野球拳(业余jscoder)~,捏哈哈..Z
+        作者:风云舞
+        欢迎访问bbs.51js.com无忧脚本,大牛一堆!^-^</center>
+    <div id="me" style="position:absolute;left:400;top:300;">
+        <img src="http://files.jb51.net/upload/20090424013004103.gif" id="img1" style="position:absolute;clip:rect(0 25% 12.5% 0);top:-64;z-index:5;" jiange=0></div>
+
+    <div style="position:absolute;left:600;top:500;width:150;height:80;border:1 solid black;background-color:blue"></div>
+    <div style="position:absolute;left:100;top:380;width:150;height:80;border:1 solid black;background-color:blue"></div>
+    <!--以上是HTML,以下就是程序了-->
+    <script>
+        function window.onload(){ //启动,反正一切为了 - 效率,还是效率...程序效率.
+            yidong.hei=img1.offsetHeight;yidong.wid=img1.offsetWidth
+        }
+        var time1=null //全局
+        var yidong={yibu1:0,yibu2:0,su:3,haomiao:25, //移动/json程序集合
+            zhenx:1,zheny:1,hei:0,wid:0,
+            jiange:6,
+            cle:function(){if(time1!=null){clearInterval(time1);time1=null;yidong.yibu1=0;yidong.yibu2=0;}},
+            clips:function(){with(yidong){img1.style.clip="rect("+(12.5*zheny-12.5)+"% "+25*zhenx+"% "+(12.5*zheny)+"% "+25*(zhenx-1)+"%)"}},
+            ck:function(obj){ //RPG ck
+                with(yidong){
+                    cle();var newx=event.x-30;newy=event.y+15,oldx=obj.offsetLeft;oldy=obj.offsetTop
+                    var x1=Math.abs(newx-oldx),y1=Math.abs(newy-oldy)
+                    if(y1>x1){var x2=su/(y1/(newx-oldx));yibu2=Math.abs(x1/x2);newy-oldy>0?y2=su:y2=-su;}
+                    else{var y2=su/(x1/(newy-oldy));yibu2=Math.abs(y1/y2);newx-oldx>0?x2=su:x2=-su;}
+
+                    var su2=su/2
+                    if(x2<-su2&&y2<-su2)zheny=7; //左上
+                    else if(x2<-su2&&y2>su2)zheny=5; //左下
+                    else if(x2>su2&&y2<-su2)zheny=8; //右上
+                    else if(x2>su2&&y2>su2)zheny=6; //右下
+                    else if(x2<0&&Math.abs(y2)<su2)zheny=2; //左
+                    else if(x2>0&&Math.abs(y2)<su2)zheny=3; //右
+                    else if(Math.abs(x2)<su2&&y2<0)zheny=4; //上
+                    else if(Math.abs(x2)<su2&&y2>0)zheny=1; //下
+                    img1.style.top=-(hei/8*zheny);clips();
+
+                    time1=setInterval(function(){move(obj,x2,y2)},haomiao)
+                }},
+            move:function(obj,x2,y2){ //RPG move
+                with(yidong){
+                    if(++yibu1>yibu2)return cle();obj.style.left=x2*yibu1+oldx;obj.style.top=y2*yibu1+oldy;
+                    if(++img1.jiange>jiange){
+                        img1.jiange=0;zhenx<4?zhenx++:zhenx=1;
+                        img1.style.left=-(wid/4*(zhenx-1));clips();
+                    }
+                }}
+        } //json yidong over.
+        function document.onclick(){yidong.ck(me)}
+    </script>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=" utf-8">
+    <meta name="author" content="http://www.softwhy.com/" />
+    <title>confirm()代码实例-蚂蚁部落</title>
+    <script type="text/javascript">
+        window.onload=function(){
+            var bt=document.getElementById("bt");
+            bt.onclick=function(){
+                if(confirm("真的要删除吗?")){
+                    alert("点击了确认按钮");
+                }
+                else{
+                    alert("点击了取消按钮");
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<input type="button" id="bt" value="点击弹出确认框" />
+</body>
+</html>

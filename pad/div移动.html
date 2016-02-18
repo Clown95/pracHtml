@@ -1,0 +1,28 @@
+<!--执行在手机上-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>手机拖动</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+</head>
+<style>*{margin: 0;padding: 0;}</style>
+<body>
+<div id="my" style="width:100px; height:100px; background:#999; position:absolute;color: #ff0000;font-size: 20px">move
+    in
+    pad</div>
+</body>
+</html>
+<script type="text/javascript">
+    var my=document.getElementById("my");
+    my.addEventListener("touchstart",function(e){
+        var e=e||window.event;
+        e.preventDefault();
+    })
+    my.addEventListener("touchmove",function(e){
+        var e=e||window.event;
+        e.preventDefault();
+        this.style.left=e.touches[0].clientX-50+"px";
+        this.style.top=e.touches[0].clientY-50+"px";
+    })
+</script>

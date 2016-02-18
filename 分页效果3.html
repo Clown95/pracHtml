@@ -1,0 +1,102 @@
+<%@ Page Language="C#" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script runat="server">
+</script>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <meta charset="UTF-8">
+    <title>无标题页</title>
+    <script language="javascript" type="text/javascript" >
+        function showpage(url,num,c_p)
+        {
+            var prev=0;var next=0;var temp=0;var html="";
+            if(parseInt(c_p+3)>num)
+            {
+                prev=num;
+            }
+            else
+            {
+                prev=parseInt(c_p+3);
+            }
+            temp=10-(prev-c_p);
+            if(c_p-temp>0)
+            {
+                next=c_p-temp;
+            }
+            else
+            {
+                next=1;
+            }
+//如果显示的第一页<10，总页数又大于10 
+            if(c_p+3<10&&num>c_p+3)
+            {
+                for(j=1;j<=10-(c_p+3);j++)
+                {
+                    prev++;
+                }
+            }
+            if(c_p!=num)
+            {
+                html+="<a href='"+url+"index="+(1+c_p)+"'>上一页</a>"+" ";
+            }
+            for (i=prev;i>=next;i--)
+            {
+                if (i==c_p)
+                {
+                    html+="<font color=red>"+i+" </font>";
+                }
+                else
+                {
+                    html+="<a href='"+url+"index="+i+"'>"+i+"</a>"+" ";
+                }
+            }
+            if(c_p!=1)
+            {
+                html+="<a href='"+url+"index="+(c_p-1)+"'>下一页</a>"+" ";
+            }
+            document.getElementById("pagenumber").innerHTML=html+" 转到<input id=\"page\" style=\"width: 33px\" />页 <input type=\"button\" value=\"go\" onclick=\"funcGo()\" />";
+        }
+        function funcLoad()
+        {
+            var num=100;
+            var url="testpager.html?";
+            var index ;
+            index = getUrlParam("index");
+            if(index==0)
+            {
+                index=num;
+            }
+            showpage(url,num,index);
+        }
+        function getUrlParam(name)
+        {
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r!=null)
+            {
+                return parseInt(unescape(r[2]));
+            }
+            return 0;
+        }
+        function funcGo()
+        {
+            var num=100;
+            if(parseInt(document.getElementById("page").value)>0&&parseInt(document.getElementById("page").value)<=num)
+            {
+                window.location.href="testpager.html?index="+parseInt(document.getElementById("page").value);
+            }
+            else
+            {
+                alert("页码不存在！");
+                return false;
+            }
+        }
+    </script>
+</head>
+<body onload="funcLoad(0)">
+<form id="form1" runat="server">
+    <div id="pagenumber">
+    </div>
+</form>
+</body>
+</html>

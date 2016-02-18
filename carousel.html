@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>三张并列轮播图</title>
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/owl.theme.css">
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/owl.carousel.js"></script>
+    <style>
+        #main{
+            width: 100%;
+            height: 100%;
+            background: forestgreen;
+        }
+        #owl-demo #describe{
+            position: relative;
+            margin: 0 auto;
+            padding-top: 100px;
+            text-align: center;
+            color: #FFFFFF;
+            font-weight: bolder;
+            font-size: 20px;
+            width: auto;
+            height: auto;
+            display: block;
+            z-index: 99;
+        }
+        #owl-demo img{
+            position: relative;
+            margin: 50px auto;
+            width: 80%;
+            height: 50%;
+            display: block;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("#owl-demo").owlCarousel({
+                items:1,
+                autoPlay:true
+            });
+        });
+//        $(document).ready(function () {
+//            $("owl-demo").owlCarousel({
+//                        items: 1,
+//                        autoPlay: true,
+
+//                    }
+//            );
+//        });
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="owl-demo" class="owl-carousel">
+                <div class="items"><div id="describe">郁金香的美，简单自由，让你忍不住想去靠近</div><img src="images/1.jpg"></div>
+                <div class="items"><div id="describe">小雏菊的美，简单自由，让你忍不住想去靠近</div><img src="images/2.jpg"></div>
+                <div class="items"><div id="describe">铃兰的美，简单自由，让你忍不住想去靠近</div><img src="images/3.jpg"></div>
+                <div class="items"><div id="describe">蒲公英的美，简单自由，让你忍不住想去靠近</div><img src="images/4.jpg"></div>
+                <div class="items"><div id="describe">自郁金香的美，简单自由，让你忍不住想去靠近</div><img src="images/5.jpg"></div>
+                <div class="items"><div id="describe">郁金香的美，简单自由，让你忍不住想去靠近</div><img src="images/6.jpg"></div>
+            </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>滑动导航菜单</title>
+    <style>
+        body {margin:25px; font:12px Verdana, Arial, Helvetica}
+        * {padding:0; margin:0}
+        .dropdown {float:left; padding-right:5px}
+        .dropdown dt {width:188px; border:2px solid #9ac1c9; padding:8px; font-weight:bold; cursor:pointer; background:url(images/header.gif)}
+        .dropdown dt:hover {background:url(images/header_over.gif)}
+        .dropdown dd {position:absolute; overflow:hidden; width:208px; display:none; background:#fff; z-index:200; opacity:0}
+        .dropdown ul {width:204px; border:2px solid #9ac1c9; list-style:none; border-top:none}
+        .dropdown li {display:inline}
+        .dropdown a, .dropdown a:active, .dropdown a:visited {display:block; padding:5px; color:#333; text-decoration:none; background:#eaf0f2; width:194px}
+        .dropdown a:hover {background:#d9e1e4; color:#000}
+        .dropdown .underline {border-bottom:1px solid #b9d6dc}
+    </style>
+    <script type="text/javascript">
+        var DDSPEED = 10;
+        var DDTIMER = 15;
+        function ddMenu(id,d){
+            var h = document.getElementById(id + '-ddheader');
+            var c = document.getElementById(id + '-ddcontent');
+            clearInterval(c.timer);
+            if(d == 1){
+                clearTimeout(h.timer);
+                if(c.maxh && c.maxh <= c.offsetHeight){return}
+                else if(!c.maxh){
+                    c.style.display = 'block';
+                    c.style.height = 'auto';
+                    c.maxh = c.offsetHeight;
+                    c.style.height = '0px';
+                }
+                c.timer = setInterval(function(){ddSlide(c,1)},DDTIMER);
+            }else{
+                h.timer = setTimeout(function(){ddCollapse(c)},50);
+            }
+        }
+        function ddCollapse(c){
+            c.timer = setInterval(function(){ddSlide(c,-1)},DDTIMER);
+        }
+        function cancelHide(id){
+            var h = document.getElementById(id + '-ddheader');
+            var c = document.getElementById(id + '-ddcontent');
+            clearTimeout(h.timer);
+            clearInterval(c.timer);
+            if(c.offsetHeight < c.maxh){
+                c.timer = setInterval(function(){ddSlide(c,1)},DDTIMER);
+            }
+        }
+        function ddSlide(c,d){
+            var currh = c.offsetHeight;
+            var dist;
+            if(d == 1){
+                dist = (Math.round((c.maxh - currh) / DDSPEED));
+            }else{
+                dist = (Math.round(currh / DDSPEED));
+            }
+            if(dist <= 1 && d == 1){
+                dist = 1;
+            }
+            c.style.height = currh + (dist * d) + 'px';
+            c.style.opacity = currh / c.maxh;
+            c.style.filter = 'alpha(opacity=' + (currh * 100 / c.maxh) + ')';
+            if((currh < 2 && d != 1) || (currh > (c.maxh - 2) && d == 1)){
+                clearInterval(c.timer);
+            }
+        }
+    </script>
+</head>
+<body>
+<dl class="dropdown">
+    <dt id="one-ddheader" onmouseover="ddMenu('one',1)" onmouseout="ddMenu('one',-1)">源码下载</dt>
+    <dd id="one-ddcontent" onmouseover="cancelHide('one')" onmouseout="ddMenu('one',-1)">
+        <ul>
+            <li><a href="#" class="underline">最新源码</a></li>
+            <li><a href="#" class="underline">下载排行</a></li>
+            <li><a href="#" class="underline">脚本资源</a></li>
+            <li><a href="#">Ajax实例</a></li>
+        </ul>
+    </dd>
+</dl>
+<dl class="dropdown">
+    <dt id="two-ddheader" onmouseover="ddMenu('two',1)" onmouseout="ddMenu('two',-1)">网页特效</dt>
+    <dd id="two-ddcontent" onmouseover="cancelHide('two')" onmouseout="ddMenu('two',-1)">
+        <ul>
+            <li><a href="#" class="underline">菜单导航</a></li>
+            <li><a href="#" class="underline">层和布局</a></li>
+            <li><a href="#" class="underline">图片特效</a></li>
+        </ul>
+    </dd>
+</dl>
+</body>
+</html>

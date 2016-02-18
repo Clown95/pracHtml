@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>节点的操作：增删</title>
+</head>
+<body>
+    <div id="dojie" class="dojie">
+        <p>张三</p>
+        <p>李四</p>
+        <p>王五</p>
+        <p>蒋六</p>
+        <p>肖七</p>
+        <p>温八</p>
+    </div>
+<div id="test">
+    <button onclick="addnode()" value="添加节点">添加节点</button>
+    <button onclick="delnode()" value="删除节点">删除节点</button>
+</div>
+</body>
+<script type="text/javascript">
+    dojie = document.getElementById('dojie');
+    function addnode() {
+        var donode = document.createElement('p');
+        var dotext = document.createTextNode("我是老大");
+        donode.appendChild(dotext);
+//    document.write("is ok?")
+        dojie.appendChild(donode);
+    }
+    function delnode(){
+//        var donode = document.getElementsByTagName(p);
+//        dojie.removeChild(donode[0]);
+        dojie.removeChild(dojie.childNodes[0]);
+    }
+</script>
+</html>

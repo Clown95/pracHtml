@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        p,a{
+            display: block;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body style="text-align: center;color: #ff0000">
+    <p>html + javascript 如何实现点击下载链接或按钮弹出下载对话框
+        html + javascript 如何实现点击下载链接或按钮弹出下载对话框
+        我要下载的是 .excel .word .pdf .ppt文件</p>
+    <center><button >下载</button></center>
+    <a href="source/1.jpg" >下载1</a>
+    <a href="source/1.jpg" target="_self" >下载2</a>
+    <a href="source/1.jpg" target="_blank" >下载3</a>
+    <a onclick="pop()">js弹出框:百度页面</a>
+    <a onclick="pop1()">js弹出框:百度页面：大小限制</a>
+    <a onclick="pop2()">js弹出框:百度页面：大小限制</a>
+    <script language=JavaScript>
+//        window.open('source/1.jpg'); 页面已载入就弹出
+        <!--
+        function pop(){
+            window.open('http://www.baidu.com');
+        }
+        function pop1(){
+            window.open('source/1.jpg','百度搜索',outerHeight=100,outerWidth=100);
+        }
+        function pop2(){
+            window.open('source/1.jpg','百度搜索',"height=100, width=400, top=100,left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no,status=no");
+        }
+        -->
+    </script>
+</body>
+</html>

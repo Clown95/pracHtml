@@ -1,0 +1,57 @@
+<!--没实现-->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/pagepac.js"></script>
+</head>
+<body>
+    <script>
+        function QueryList(curpage) {
+            if (curpage == "" || curpage == null || curpage == undefined) {
+                curpage = 1;
+            }
+            var pagesize = 10;
+
+            var Countys = $("#Countys").val(); //县
+            var enddate = $("#enddate").val(); //结束时间
+            var begindate = $("#begindate").val(); //开始时间
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: { "Countys": Countys, "enddate": enddate, "begindate": begindate, "curpage": curpage, "pagesize": pagesize },
+                dataType: "json",
+                error: function (xhr, status, errMsg) { window.location.href = "/CommonError/index/" + errMsg.code + "?txt=" + errMsg.msg; },
+                success: function (mydata) {
+                    var str = "";
+                    $.each(mydata.Tdata, function (i, item) {
+
+                        str += "<tr>"
+                        str += "<td>" + $.FormatDateTime(item.ControlBeginTime, false) + "</td>";
+                        str += "<td>" + $.FormatDateTime(item.ControlEndTime, false) + "</td>";
+                        str += "<td>" + item.Name + "</td>";
+                        str += "<td>" + item.PlateNumber + "</td>";
+                        str += "<td>" + item.ControlDept + "</td>";
+                        if (item.IsAll == "0") {
+                            str += "<td>全县布控</td>";
+                        }
+                        else {
+                            str += "<td>按卡口点布控</td>";
+                        }
+                        str += "<td>" + item.IsAll == "0" ? "全县布控" : "按卡口点布控" + "</td>";
+                        str += "<td>修改</td>";
+                        str += "<td>删除</td>";
+                        str += "<td>详细</td>";
+                        str + "</tr>";
+                    });
+
+                    $("#srh_rslt tbody").html(str);
+
+                    $(".pagination").html($.PageFunc(mydata.total, pagesize, curpage, "QueryList"));
+                }
+            });
+        }
+    </script>
+</body>
+</html>

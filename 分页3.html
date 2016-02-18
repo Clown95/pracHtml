@@ -1,0 +1,65 @@
+'//判断内容里是不是包含这个分页标签
+if instr(cinfo,"[NextPage]")>0 then
+flag=1
+else
+flag=0
+end if
+
+'//设置参数
+<script language="Javascript" >
+    var Text,PageSize,flag
+    Text="<%=DealJsText(cinfo)%>";
+    PageSize=1500;
+    flag=<%=flag%>;
+</script>
+
+'//JS文件包函
+<script language="Javascript" src="CutArticle.js"></script>
+
+'//文本显示
+<span class="news">
+<div id="article" style="font-size:12px;"></div>
+<script language="JavaScript">
+    if (flag==1 || flag==2){
+        text_pagination(1);
+    }
+    else{
+        article.innerHTML=Text;
+    }
+</script>
+</span>
+
+'//下面为JS文本处理函数
+
+function DealJsText(Str)
+if not isnull(Str) then
+Dim re,po,ii
+Str = Replace(Str, CHR(9), " ")
+Str = Replace(Str, CHR(39), "'")
+Str = Replace(Str, CHR(13), "")
+Str = Replace(Str, CHR(10) & CHR(13), "</P><P> ")
+    Str = Replace(Str, CHR(10), "")
+    Str = Replace(Str, "‘", "'")
+    Str = Replace(Str, "'", "'")
+    Str = Replace(Str, "\", "\\")
+    Str = Replace(Str, CHR(32), " ")
+    Str = Replace(Str, CHR(34), "\""")
+    Str = Replace(Str, CHR(39), "'")
+    Set re=new RegExp
+    re.IgnoreCase =true
+    re.Global=True
+    po=0
+    ii=0
+    re.Pattern="(javascript)"
+    Str=re.Replace(Str,"<I>javascript</I>")
+    re.Pattern="(jscript:)"
+    Str=re.Replace(Str,"<I>jscript:</I>")
+    re.Pattern="(js:)"
+    Str=re.Replace(Str,"<I>js:</I>")
+    re.Pattern="(</SCRIPT>)"
+    Str=re.Replace(Str,"</script>")
+    re.Pattern="(<SCRIPT)"
+    Str=re.Replace(Str,"<script")
+    DealJsText = Str
+    End if
+    end Function

@@ -1,0 +1,875 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>JavaScript 多级联动浮动菜单</title>
+    <script type="text/javascript">
+        var $$ = function (id) {
+            return "string" == typeof id ? document.getElementById(id) : id;
+        };
+        var isIE8 = navigator.userAgent.indexOf('MSIE 8.0') != -1;
+        var isChrome = navigator.userAgent.indexOf('Chrome') != -1;
+        var isSafari = navigator.userAgent.indexOf('AppleWebKit') != -1;
+        function addEvent(element, type, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(type, handler, false);
+            } else {
+                if (!handler.$$guid) handler.$$guid = addEvent.guid++;
+                if (!element.events) element.events = {};
+                var handlers = element.events[type];
+                if (!handlers) {
+                    handlers = element.events[type] = {};
+                    if (element["on" + type]) {
+                        handlers[0] = element["on" + type];
+                    }
+                }
+                handlers[handler.$$guid] = handler;
+                element["on" + type] = handleEvent;
+            }
+        };
+        addEvent.guid = 1;
+        function removeEvent(element, type, handler) {
+            if (element.removeEventListener) {
+                element.removeEventListener(type, handler, false);
+            } else {
+                if (element.events && element.events[type]) {
+                    delete element.events[type][handler.$$guid];
+                }
+            }
+        };
+        function handleEvent(event) {
+            var returnValue = true;
+            event = fixEvent(event);
+            var handlers = this.events[event.type];
+            for (var i in handlers) {
+                this.$$handleEvent = handlers[i];
+                if (this.$$handleEvent(event) === false) {
+                    returnValue = false;
+                }
+            }
+            return returnValue;
+        };
+        function fixEvent(event) {
+            if (event) return event;
+            event = ((this.ownerDocument || this.document || this).parentWindow || window).event;
+            var scrolldoc = isChrome || isSafari ? document.body : document.documentElement;
+            event.pageX = event.clientX + scrolldoc.scrollLeft;
+            event.pageY = event.clientY + scrolldoc.scrollTop;
+            event.target = event.srcElement;
+            event.stopPropagation = fixEvent.stopPropagation;
+            event.preventDefault = fixEvent.preventDefault;
+            if(event.type == "mouseout") {
+                event.relatedTarget = event.toElement;
+            }else if(event.type == "mouseover") {
+                event.relatedTarget = event.fromElement;
+            }
+            return event;
+        };
+        fixEvent.preventDefault = function() {
+            this.returnValue = false;
+        };
+        fixEvent.stopPropagation = function() {
+            this.cancelBubble = true;
+        };
+        var forEach = function(array, callback, thisObject){
+            if(array.forEach){
+                array.forEach(callback, thisObject);
+            }else{
+                for (var i = 0, len = array.length; i < len; i++) { callback.call(thisObject, array[i], i, array); }
+            }
+        }
+        var Bind = function(object, fun) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            return function() {
+                return fun.apply(object, args.concat(Array.prototype.slice.call(arguments)));
+            }
+        }
+        var BindAsEventListener = function(object, fun) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            return function(event) {
+                return fun.apply(object, [event].concat(args));
+            }
+        }
+        var Extend = function(destination, source) {
+            for (var property in source) {
+                destination[property] = source[property];
+            }
+            return destination;
+        }
+        var DeepExtend = function(destination, source){
+            for (var property in source) {
+                var copy = source[property];
+                if ( destination === copy ) continue;
+                if ( typeof copy === "object" ){
+                    destination[property] = DeepExtend(destination[property] || {}, copy);
+                }else{
+                    destination[property] = copy;
+                }
+            }
+            return destination;
+        }
+        var Filter = function(array, callback, thisObject){
+            if(array.filter){
+                return array.filter(callback, thisObject);
+            }else{
+                var res = [];
+                for (var i = 0, len = array.length; i < len; i++) { callback.call(thisObject, array[i], i, array) && res.push(array[i]); }
+                return res;
+            }
+        }
+        var Every = function(array, callback, thisObject){
+            if(array.every){
+                return array.every(callback, thisObject);
+            }else{
+                var res = [];
+                for (var i = 0, len = array.length; i < len; i++) {
+                    if (!callback.call(thisObject, array[i], i, array)) return false;
+                };
+                return true;
+            }
+        }
+        var IndexOf = function(array, elt){
+            if(array.indexOf){
+                return array.indexOf(elt);
+            }else{
+                var res = [];
+                for (var i = 0, len = array.length; i < len; i++) {
+                    if (array[i] === elt) return i;
+                };
+                return -1;
+            }
+        }
+        var Contains = function(a, b){
+            return a.contains ? a != b && a.contains(b) : !!(a.compareDocumentPosition(b) & 16);
+        }
+        var isArray = function( obj ) {
+            return Object.prototype.toString.call(obj) === "[object Array]";
+        }
+        function GetRelative(relElem, fixedElem, options){
+            var doc = relElem.ownerDocument, docElem = doc.documentElement
+                    ,scrolldoc = isChrome || isSafari ? doc.body : docElem,
+                    rect = relElem.getBoundingClientRect();
+            //默认值
+            options = Extend({
+                Align:   "clientleft",//水平方向定位
+                vAlign:   "clienttop",//垂直方向定位
+                CustomLeft:  0,//自定义left定位
+                CustomTop:  0,//自定义top定位
+                PercentLeft: 0,//自定义left百分比定位
+                PercentTop:  0,//自定义top百分比定位
+                Adaptive:  false,//是否自适应定位
+                Reset:   false//自适应定位时是否重新定位
+            }, options || {});
+            //ie8的getBoundingClientRect获取不准确
+            if ( isIE8 ) {
+                var elem = relElem, left = - scrolldoc.scrollLeft, top = - scrolldoc.scrollTop;
+                while (elem) { left += elem.offsetLeft, top += elem.offsetTop; elem = elem.offsetParent; };
+                rect.left = left; rect.right = left + relElem.offsetWidth;
+                rect.top = top; rect.bottom = top + relElem.offsetHeight;
+            };
+            var iLeft = GetRelative.Left(options.Align, rect, fixedElem) + options.CustomLeft,iTop = GetRelative.Top(options.vAlign, rect, fixedElem) + options.CustomTop;
+            if (options.PercentLeft) { iLeft += .01 * options.PercentLeft * relElem.offsetWidth; };
+            if (options.PercentTop) { iTop += .01 * options.PercentTop * relElem.offsetHeight; };
+            if (options.Adaptive) {
+                var maxLeft = docElem.clientWidth - fixedElem.offsetWidth,
+                        maxTop = docElem.clientHeight - fixedElem.offsetHeight;
+                if (options.Reset) {
+                    if (iLeft > maxLeft || iLeft < 0) {
+                        iLeft = GetRelative.Left(2 * iLeft > maxLeft ? "left" : "right", rect, fixedElem) + options.CustomLeft;
+                    };
+                    if (iTop > maxTop || iTop < 0) {
+                        iTop = GetRelative.Top(2 * iTop > maxTop ? "top" : "bottom", rect, fixedElem) + options.CustomTop;
+                    };
+                } else {
+                    //修正到适合位置
+                    iLeft = Math.max(Math.min(iLeft, maxLeft), 0);
+                    iTop = Math.max(Math.min(iTop, maxTop), 0);
+                };
+            };
+            iLeft += scrolldoc.scrollLeft; iTop += scrolldoc.scrollTop;
+            return { Left: iLeft, Top: iTop };
+        };
+        GetRelative.Left = function(align, rect, fixedElem){
+            var iLeft = 0;
+            switch (align.toLowerCase()) {
+                case "left" :
+                    return rect.left - fixedElem.offsetWidth;
+                case "clientleft" :
+                    return rect.left;
+                case "center" :
+                    return (rect.left + rect.right - fixedElem.offsetWidth)/2;
+                case "clientright" :
+                    return rect.right - fixedElem.offsetWidth;
+                case "right" :
+                default :
+                    return rect.right;
+            };
+        };
+        GetRelative.Top = function(valign, rect, fixedElem){
+            var iTop = 0;
+            switch (valign.toLowerCase()) {
+                case "top" :
+                    return rect.top - fixedElem.offsetHeight;
+                case "clienttop" :
+                    return rect.top;
+                case "center" :
+                    return (rect.top + rect.bottom - fixedElem.offsetHeight)/2;
+                case "clientbottom" :
+                    return rect.bottom - fixedElem.offsetHeight;
+                case "bottom" :
+                default :
+                    return rect.bottom;
+            };
+        };
+        var FixedMenu = function(containers, options) {
+            this._timerContainer = null;//容器定时器
+            this._timerMenu = null;//菜单定时器
+            this._frag = document.createDocumentFragment();//碎片对象，保存菜单元素
+            this._menus = {};//菜单对象
+            this._containers = [];//容器集合
+            this.SetOptions(options);
+            this._custommenu = this.options.Menu;
+            this.Css = this.options.Css;
+            this.Hover = this.options.Hover;
+            this.Active = this.options.Active;
+            this.Tag = this.options.Tag;
+            this.Txt = this.options.Txt;
+            this.FixedMenu = this.options.FixedMenu;
+            this.Fixed = this.options.Fixed;
+            this.Attribute = this.options.Attribute;
+            this.Property = this.options.Property;
+            this.onBeforeShow = this.options.onBeforeShow;
+            this.Delay = parseInt(this.options.Delay) || 0;
+            forEach(isArray(containers) ? containers : [containers], function(o, i){
+                var pos, menu;
+                if ( o.id ) {
+                    pos = o.id; menu = o.menu ? o.menu : pos;
+                } else {
+                    pos = menu = o;
+                };
+                pos = $$(pos); menu = $$(menu);
+                //容器对象 Pos:定位元素 Menu:插入菜单元素
+                pos && menu && this.IniContainer( i, { Pos: pos, Menu: menu } );
+            }, this);
+            //初始化程序
+            this.Ini();
+        };
+        FixedMenu.prototype = {
+            //设置默认属性
+            SetOptions: function(options) {
+                this.options = {//默认值
+                    Menu:[],//自定义菜单集合
+                    Delay:200,//延迟值(微秒)
+                    Tag:"div",//默认生成标签
+                    Css:undefined,//默认样式
+                    Hover:undefined,//触发菜单样式
+                    Active:undefined,//显示下级菜单时显示样式
+                    Txt:"",//菜单内容
+                    FixedMenu: true,//是否相对菜单定位（否则相对容器）
+                    Fixed:{ Align: "clientleft", vAlign: "bottom" },//定位对象
+                    Attribute:{},//自定义Attribute属性
+                    Property:{},//自定义Property属性
+                    onBeforeShow:function(){}//菜单显示时执行
+                };
+                Extend( this.options, options || {} );
+            },
+            Ini: function() {
+                this.Hide();//隐藏菜单
+                this.BuildMenu();//生成菜单对象
+                this.forEachContainer(this.ResetContainer);//重置容器属性
+                this.InsertMenu(0, 0);//显示菜单
+            },
+            BuildMenu: function() {
+                //清除旧菜单dom(包括自定义的)
+                this.forEachMenu(function(o){
+                    var elem = o._elem;
+                    if ( elem ) {
+                        //防止dom内存泄漏
+                        removeEvent( elem, "mouseover", o._event );
+                        elem.parentNode.removeChild(elem);
+                        o._elem = o.elem = null;
+                    };
+                });
+                //设置菜单默认值
+                var options = {
+                    id:   0,//id
+                    rank:  0,//排序
+                    elem:  "",//自定义元素
+                    tag:  this.Tag,
+                    css:  this.Css,
+                    hover:  this.Hover,
+                    active:  this.Active,
+                    txt:  this.Txt,
+                    fixedmenu: !!this.FixedMenu,
+                    fixed:  this.Fixed,
+                    attribute: this.Attribute,
+                    property: this.Property
+                };
+                //先定义"0"顶级菜单
+                this._menus = { "0": { "_children": [] } };
+                //整理自定义菜单并插入到程序菜单对象
+                forEach(this._custommenu, function(o) {
+                    //生成菜单对象(由于包含对象，要用深度扩展)
+                    var menu = DeepExtend( DeepExtend( {}, options ), o || {} );
+                    //去掉相同id菜单，同时排除了id为"0"的菜单
+                    if ( !!this._menus[ menu.id ] ) { return; };
+                    //重置属性
+                    menu._children = []; menu._index = -1;
+                    this._menus[menu.id] = menu;
+                }, this);
+                //建立树形结构
+                this.forEachMenu(function( o, id, menus ) {
+                    if ( "0" === id ) { return; };//顶级没有父级菜单
+                    var parent = this._menus[o.parent];
+                    //父级菜单不存在或者父级是自己的话，当成一级菜单
+                    if ( !parent || parent === o ) { parent = menus[o.parent = "0"]; };
+                    //插入到父级菜单对象的_children中
+                    parent._children.push(o);
+                });
+                //整理菜单对象
+                this.forEachMenu(function(o) {
+                    //如果有自定义元素的话先放到碎片文档中
+                    !!o.elem && ( o.elem = $$(o.elem) ) && this._frag.appendChild(o.elem);
+                    //修正样式,优先使用自定义元素的class
+                    if ( !!o.elem && o.elem.className ) {
+                        o.css = o.elem.className;
+                    } else if ( o.css === undefined ) { o.css = ""; };
+                    if ( o.hover === undefined ) { o.hover = o.css; };
+                    if ( o.active === undefined ) { o.active = o.hover; };
+                    //对菜单对象的_children集合排序(先按rank再按id排序)
+                    o._children.sort(function( x, y ) { return x.rank - y.rank || x.id - y.id; });
+                });
+            },
+            //插入菜单
+            InsertMenu: function(index, parent) {
+                var container = this._containers[index];
+                //如果是同一个父级菜单不用重复插入
+                if ( container._parent === parent ) { return; };
+                container._parent = parent;
+                //把原有容器内菜单移到碎片对象中
+                forEach( container._menus, function(o) { o._elem && this._frag.appendChild(o._elem); }, this );
+                //重置子菜单对象集合
+                container._menus = [];
+                //把从父级菜单元素的子菜单对象集合获取的元素插入到容器
+                forEach(this._menus[parent]._children, function( menu, i ){
+                    this.CheckMenu( menu, index );//检查菜单
+                    container._menus.push(menu);//加入到容器的子菜单集合，方便调用
+                    container.Menu.appendChild(menu._elem);//菜单元素插入到容器
+                }, this);
+            },
+            //检查菜单
+            CheckMenu: function(menu, index) {
+                //索引保存到菜单对象属性中，方便调用
+                menu._index = index;
+                //如果菜单对象没有元素
+                if ( !menu._elem ) {
+                    var elem = menu.elem;
+                    //如果没有自定义元素的话创建一个
+                    if ( !elem ) { elem = document.createElement(menu.tag); elem.innerHTML = menu.txt; };
+                    //设置property
+                    Extend( elem, menu.property );
+                    //设置attribute
+                    var attribute = menu.attribute;
+                    for (var att in attribute) { elem.setAttribute( att, attribute[att] ); };
+                    //设置样式
+                    elem.className = menu.css;
+                    //设置事件
+                    menu._event = BindAsEventListener( this, this.HoverMenu, menu );//用于清除事件
+                    addEvent( elem, "mouseover", menu._event );
+                    //保存到菜单对象
+                    menu._elem = elem;
+                };
+            },
+            //触发菜单
+            HoverMenu: function(e, menu) {
+                var elem = menu._elem;
+                //如果是内部元素触发直接返回
+                if ( Contains( elem, e.relatedTarget ) || elem === e.relatedTarget ) { return; };
+                clearTimeout(this._timerMenu);
+                //可能在多个容器间移动，所以全部容器都重新设置样式
+                this.forEachContainer(function(o, i){
+                    if ( o.Pos.visibility === "hidden" ) { return; };
+                    this.ResetCss(o);
+                    //设置当前菜单为active样式
+                    var menu = o._active;
+                    if ( menu ) { menu._elem.className = menu.active; };
+                });
+                //设置当前菜单为触发样式
+                if ( this._containers[menu._index]._active !== menu ) { elem.className = menu.hover; };
+                //触发显示菜单
+                this._timerMenu = setTimeout( Bind( this, this.ShowMenu, menu ), this.Delay );
+            },
+            //显示菜单
+            ShowMenu: function(menu) {
+                var index = menu._index, container = this._containers[index], child = !!menu._children.length;
+                //隐藏不需要的容器
+                this.forEachContainer( function(o, i) { i > index && this.HideContainer(o); } );
+                //重置当前容器_active
+                container._active = null;
+                //如果有子级菜单
+                if ( child ) {
+                    //设置当前容器_active
+                    container._active = menu;
+                    //显示下一级容器
+                    index++;//设置索引
+                    this.CheckContainer(index);//检查容器
+                    this.InsertMenu(index, menu.id);//插入菜单
+                    this.ShowContainer(menu);//显示容器
+                };
+                //重置当前容器的css
+                this.ResetCss(container);
+                //设置当前菜单样式
+                menu._elem.className = child ? menu.active : menu.hover;
+            },
+            //初始化容器(索引, 容器元素)
+            IniContainer: function(index, container) {
+                var oContainer = container.Pos;
+                //重置属性
+                this.ResetContainer(container);
+                //添加事件
+                addEvent( oContainer, "mouseover", Bind( this, function(){ clearTimeout(this._timerContainer); } ) );
+                addEvent( oContainer, "mouseout", BindAsEventListener( this, function(e){
+                    //先判断是否移出到所有容器之外
+                    var elem = e.relatedTarget,
+                            isOut = Every( this._containers, function(o){ return !(Contains(o.Pos, elem) || o.Pos == elem); } );
+                    if ( isOut ) {
+                        //清除定时器并隐藏
+                        clearTimeout(this._timerContainer); clearTimeout(this._timerMenu);
+                        this._timerContainer = setTimeout( Bind( this, this.Hide ), this.Delay );
+                    };
+                }));
+                //除了第一个容器外设置浮动样式
+                if ( index ) {
+                    var css = container.Pos.style;
+                    css.position = "absolute"; css.display = "block"; css.margin = 0;
+                    //要后面的覆盖前面的
+                    css.zIndex = this._containers[index - 1].Pos.style.zIndex + 1;
+                };
+                //记录索引，方便调用
+                container._index = index;
+                //插入到容器集合
+                this._containers[index] = container;
+            },
+            //检查容器
+            CheckContainer: function(index) {
+                if ( index > 0 && !this._containers[index] ) {
+                    //如果容器不存在，根据前一个容器复制成新容器，第一个容器必须自定义
+                    var pre = this._containers[index - 1].Pos
+                    //用了新的添加事件方式，没有ie的cloneNode的bug
+                            ,container = pre.parentNode.insertBefore( pre.cloneNode(false), pre );
+                    //清除id防止冲突
+                    container.id = "";
+                    //初始化容器
+                    this.IniContainer( index, { Pos: container, Menu: container } );
+                };
+            },
+            //显示容器
+            ShowContainer: function(menu) {
+                var index = menu._index,
+                        container = this._containers[index + 1].Pos,
+                        elem = menu.fixedmenu ? menu._elem : this._containers[index].Pos,
+                        pos = GetRelative( elem, container, menu.fixed );
+                //定位并显示容器
+                container.style.left = pos.Left + "px";
+                container.style.top = pos.Top + "px";
+                //执行显示前事件
+                this.onBeforeShow(container, menu);
+                container.style.visibility = "visible";
+            },
+            //隐藏容器
+            HideContainer: function(container) {
+                //设置隐藏
+                var css = container.Pos.style;
+                css.visibility = "hidden"; css.left = css.top = "-9999px";
+                //重置上一个菜单的触发菜单对象
+                this._containers[container._index - 1]._active = null;
+            },
+            //重置容器对象属性
+            ResetContainer: function(container) {
+                container._active = null;//重置触发菜单
+                container._menus = [];//重置子菜单对象集合
+                container._parent = -1;//重置父级菜单id
+            },
+            //隐藏菜单
+            Hide: function() {
+                this.forEachContainer(function(o, i){
+                    if ( i === 0 ) {
+                        //如果是第一个重设样式和_active
+                        this.ResetCss(o);
+                    } else {//隐藏容器
+                        this.HideContainer(o);
+                    };
+                });
+            },
+            //重设容器菜单样式
+            ResetCss: function(container) {
+                forEach( container._menus, function(o, i){ o._elem.className = o.css; }, this );
+            },
+            //历遍菜单对象集合
+            forEachMenu: function(callback) {
+                for ( var id in this._menus ) { callback.call( this, this._menus[id], id, this._menus ); };
+            },
+            //历遍容器对象集合
+            forEachContainer: function(callback) {
+                forEach( this._containers, callback, this );
+            },
+            //添加自定义菜单
+            Add: function(menu) {
+                this._custommenu = this._custommenu.concat(menu);
+                this.Ini();
+            },
+            //修改自定义菜单
+            Edit: function(menu) {
+                forEach( isArray( menu ) ? menu : [ menu ], function(o){
+                    //如果对应id的菜单存在
+                    if ( o.id && this._menus[o.id] ) {
+                        //从自定义菜单中找出对应菜单,并修改
+                        Every( this._custommenu, function(m, i){
+                            if ( m.id === o.id ) {
+                                this._custommenu[i] = DeepExtend( m, o ); return false;
+                            };
+                            return true;
+                            //用Every可以跳出循环
+                        }, this );
+                    };
+                }, this );
+                this.Ini();
+            },
+            //删除自定义菜单
+            Delete: function() {
+                var ids = Array.prototype.slice.call(arguments);
+                this._custommenu = Filter( this._custommenu, function(o){
+                    return IndexOf(ids, o.id) === -1;
+                });
+                this.Ini();
+            }
+        };
+    </script>
+</head>
+<body>
+<style type="text/css">
+    .container1 {height:30px;}
+    .container1 div {float:left;}
+    .container1 div, .container1_2 div {width:100px;background:#FAFCFD;border:1px solid #5c9cc0;padding:10px;}
+    div.on1 {font-weight:bold;background:#EEF3F7;}
+    div.on1_2 {font-weight:bold;background:#fffff7;border:1px solid #ffcc00;}
+</style>
+菜单使用演示： <br>
+<br>
+<div id="idContainer1" class="container1"> </div>
+<div id="idContainer1_2" class="container1_2"> </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<input id="idEdit" type="button" value="添加菜单 +"/>
+位置：
+<select id="idRank">
+    <option value="3"> 第四个 </option>
+    <option value="2"> 第三个</option>
+    <option value="1"> 第二个 </option>
+    <option value="0"> 第一个 </option>
+</select>
+<select id="idDelay">
+    <option value="1000"> 1秒</option>
+    <option value="500"> 0.5秒 </option>
+    <option value="200" selected> 0.2秒 </option>
+    <option value="0"> 不延时 </option>
+</select>
+<script>
+    var menu = [
+        { id: 1, parent: 0, txt: '自定义样式', hover: "on1_2", rank: 1 },
+        { id: 2, parent: 0, txt: '下拉菜单', active: "on1_2", rank: 2 },
+        { id: 3, parent: 0, txt: '任意定位', fixed: { Align: "left" }, rank: 3 },
+        { id: 21, parent: 2, txt: '相对容器', active: "on1_2", fixedmenu: false },
+        { id: 22, parent: 2, txt: '相对菜单', active: "on1_2", fixed: { Align: "right", vAlign: "clienttop" } },
+        { id: 23, parent: 21, txt: '三级菜单' },
+        { id: 24, parent: 21, txt: '三级菜单' },
+        { id: 25, parent: 22, txt: '三级菜单' },
+        { id: 26, parent: 22, txt: '三级菜单' },
+        { id: 31, parent: 3, txt: '无法到达的', fixed: { Align: "left" } },
+        { id: 32, parent: 31, txt: '目光', fixed: { Align: "right" } },
+        { id: 33, parent: 32, txt: '无法到达的', fixed: { Align: "right", vAlign: "top" } },
+        { id: 34, parent: 33, txt: '到达', fixed: { PercentTop: 100 } },
+        { id: 35, parent: 34, txt: '到达', fixed: { Align: "left", vAlign: "clienttop", PercentLeft: -100 } },
+        { id: 36, parent: 35, txt: '梦想', fixed: { vAlign: "top" } },
+        { id: 37, parent: 36, txt: '目光', fixed: { vAlign: "top", PercentTop: -100 } },
+        { id: 38, parent: 37, txt: '脚步', fixed: { Align: "right", vAlign: "clienttop", PercentLeft: 100 } },
+        { id: 39, parent: 38, txt: '地方', fixed: { PercentTop: 100 } },
+        { id: 40, parent: 39, txt: '地方', fixed: { Align: "left" } },
+        { id: 41, parent: 40, txt: '可以', fixed: { vAlign: "top", PercentTop: -100 } },
+        { id: 42, parent: 41, txt: '可以' }
+    ];
+    var fm = new FixedMenu(["idContainer1", "idContainer1_2"], { Hover: "on1", Menu: menu });
+    //编辑测试
+    $$("idEdit").onclick = function(){
+        if(this.value == "添加菜单 +"){
+            fm.Add([
+                { id: 100, parent: 0, txt: '新加菜单+', rank: $$("idRank").value | 0 },
+                { id: 101, parent: 100, txt: '新加菜单++' },
+                { id: 102, parent: 100, txt: '新加菜单+++' }
+            ]);
+            this.value = "删除菜单 -"
+        }else{
+            fm.Delete( 100, 101, 102 );
+            this.value = "添加菜单 +"
+        }
+    }
+    //延时测试
+    $$("idDelay").onchange = function(){ fm.Delay = this.value | 0; }
+</script>
+<br>
+<br>
+仿京东商城商品分类菜单： <br>
+<br>
+<style type="text/css">
+    .container2, .container2 dd, .container2_2 dl, .container2_2 dd {margin:0;}
+    .container2 {font-size:14px;width:190px;border:1px solid #cf2020;background:#fffff5;padding:5px 8px; line-height:30px; color:#333;}
+    .container2 dt {font-weight:bold;color:#cf2020;}
+    .container2 dd {background:url(images/n4.jpg) 180px 10px no-repeat;_zoom:1;}
+    .container2_2 {background-color:#bebec3; display:none;}
+    .container2_2 dl {font-size:14px;width:200px;border:1px solid #969696;background:#fff; position:relative; left:-3px; top:-3px; }
+    .container2_2 dd div {padding:5px 20px; background:url(images/n4.jpg) 6px 7px no-repeat;_zoom:1;}
+    .container2_2 dt, .shadow {padding:0 5px; position:absolute;background:#fff; border:1px solid #969696; border-right:0;width:169px;left:-180px; top:-1px;height:24px;line-height:24px;}
+    .shadow {background-color:#bebec3;border-color:#bebec3; top:0;}
+    .container2_2 a{display:block;_zoom:1;}
+    .container2_2 a:link, .container2_2 a:visited, .container2_2 a:active {color:#333;text-decoration: none;}
+    .container2_2 a:hover {color:#ff6026;text-decoration: underline;}
+</style>
+<dl id="idContainer2" class="container2">
+    <dt id="idMenu2_1">图片动画</dt>
+    <dd id="idMenu2_2">图片效果</dd>
+    <dd id="idMenu2_3">动画效果</dd>
+    <dt id="idMenu2_51">系统其他</dt>
+    <dd id="idMenu2_52">系统效果</dd>
+    <dd id="idMenu2_53">其他效果</dd>
+</dl>
+<div id="idContainer2_2" class="container2_2">
+    <div class="shadow"></div>
+    <dl>
+        <dt id="idTitle"></dt>
+        <dd id="idMenu2">
+            <div id="idMenu2_11"><a href="#">图片滑动切换效果</a></div>
+            <div id="idMenu2_12"><a href="#">图片变换效果(ie only)</a></div>
+            <div id="idMenu2_13"><a href="#">图片滑动展示效果</a></div>
+            <div id="idMenu2_14"><a href="#">图片切割效果</a></div>
+            <div id="idMenu2_21"><a href="#">Tween算法及缓动效果</a></div>
+            <div id="idMenu2_22"><a href="#">渐变效果</a></div>
+            <div id="idMenu2_61"><a href="#">无刷新多文件上传系统</a></div>
+            <div id="idMenu2_62"><a href="#">图片切割系统</a></div>
+            <div id="idMenu2_71"><a href="#">拖放效果</a></div>
+            <div id="idMenu2_72"><a href="#">拖拉缩放效果</a></div>
+            <div id="idMenu2_73"><a href="#">滑动条效果</a></div>
+        </dd>
+    </dl>
+</div>
+<script>
+    var menu2 = [
+        { id: 1, parent: 0, elem: 'idMenu2_1' },
+        { id: 2, parent: 0, elem: 'idMenu2_2' },
+        { id: 3, parent: 0, elem: 'idMenu2_3' },
+        { id: 11, parent: 2, elem: 'idMenu2_11' },
+        { id: 12, parent: 2, elem: 'idMenu2_12' },
+        { id: 13, parent: 2, elem: 'idMenu2_13' },
+        { id: 14, parent: 2, elem: 'idMenu2_14' },
+        { id: 21, parent: 3, elem: 'idMenu2_21' },
+        { id: 22, parent: 3, elem: 'idMenu2_22' },
+        { id: 51, parent: 0, elem: 'idMenu2_51' },
+        { id: 52, parent: 0, elem: 'idMenu2_52' },
+        { id: 53, parent: 0, elem: 'idMenu2_53' },
+        { id: 61, parent: 52, elem: 'idMenu2_61' },
+        { id: 62, parent: 52, elem: 'idMenu2_62' },
+        { id: 71, parent: 53, elem: 'idMenu2_71' },
+        { id: 72, parent: 53, elem: 'idMenu2_72' },
+        { id: 73, parent: 53, elem: 'idMenu2_73' }
+    ];
+    var container2 = [ "idContainer2", { id: "idContainer2_2", menu: "idMenu2" } ];
+    new FixedMenu(container2, { Menu: menu2,
+        Fixed: { Align: "clientleft", vAlign: "clienttop", CustomTop: 5, CustomLeft: 176 },
+        onBeforeShow: function(container, menu){ $$("idTitle").innerHTML = menu._elem.innerHTML; }
+    });
+</script>
+<br>
+仿右键菜单： <br>
+<br>
+<style type="text/css">
+    .container3 {font-size:12px;border:1px solid #9d9da1;padding:3px;line-height:18px; background:#FFF; cursor:default;-moz-user-select:none;_overflow:hidden;}
+    .container3 div {padding:0 20px;}
+    .menu3_1 {color:#aca899;_zoom:1;}
+    .menu3_2 {background:url(images/n5.gif) 140px 5px no-repeat;}
+    .menu3_3 {background:url(images/n1.gif) 7px 5px no-repeat;}
+    .menu3_4 {background:url(images/n2.gif) 7px 5px no-repeat;}
+    .line3 {border-bottom:1px solid #9d9da1; _font-size:0; margin:4px 0;}
+    .on3 {background-color:#bbb7c7;}
+    .area3 { width:500px; height:200px;border:1px solid #9d9da1;}
+    .pos3 {position:absolute; display:none;line-height:20px; width:150px;}
+</style>
+<div id="idArea" class="area3"> </div>
+<div id="idContainer3" class="container3 pos3"> </div>
+<div id="idContainer3_2" class="container3"> </div>
+<script>
+    var menu3 = [
+        { id: 1, parent: 0, txt: '查看(<u>V</u>)' },
+        { id: 2, parent: 0 },
+        { id: 3, parent: 0, txt: '排列图标(<u>I</u>)' },
+        { id: 4, parent: 0, txt: '刷新(<u>E</u>)' },
+        { id: 5, parent: 0 },
+        { id: 6, parent: 0, txt: '自定义文件夹(<u>F</u>)...' },
+        { id: 7, parent: 0 },
+        { id: 8, parent: 0, txt: '粘贴(<u>P</u>)' },
+        { id: 9, parent: 0, txt: '粘贴快捷方式(<u>S</u>)' },
+        { id: 10, parent: 0 },
+        { id: 11, parent: 0, txt: '新建(<u>P</u>)' },
+        { id: 12, parent: 0 },
+        { id: 13, parent: 0, txt: '属性(<u>S</u>)' },
+        { id: 21, parent: 1, txt: '缩略图(<u>H</u>)' },
+        { id: 22, parent: 1, txt: '平铺(<u>S</u>)', css: "menu3_3", hover: "menu3_3 on3" },
+        { id: 23, parent: 1, txt: '图标(<u>N</u>)' },
+        { id: 24, parent: 1, txt: '列表(<u>L</u>)' },
+        { id: 25, parent: 1, txt: '详细信息(<u>D</u>)' },
+        { id: 31, parent: 3, txt: '名称(<u>N</u>)', css: "menu3_3", hover: "menu3_3 on3" },
+        { id: 32, parent: 3, txt: '类型(<u>S</u>)' },
+        { id: 33, parent: 3, txt: '大小(<u>T</u>)' },
+        { id: 34, parent: 3, txt: '修改时间(<u>M</u>)' },
+        { id: 35, parent: 3 },
+        { id: 36, parent: 3, txt: '按组排列(<u>G</u>)', css: "menu3_4", hover: "menu3_4 on3" },
+        { id: 37, parent: 3, txt: '自动排列(<u>A</u>)' },
+        { id: 38, parent: 3, txt: '对齐到网格(<u>L</u>)' },
+        { id: 41, parent: 11, txt: '剩下由你来写' }
+    ];
+    forEach(menu3, function(menu){
+        var id = menu.id | 0;
+        switch (id) {
+            case 1 :
+            case 3 :
+            case 11 ://有下级菜单
+                menu.css = "menu3_2"; menu.hover = "menu3_2 on3"; break;
+            case 2 :
+            case 5 :
+            case 7 :
+            case 10 :
+            case 12 :
+            case 35 ://分割线
+                menu.css = menu.hover = "line3"; break;
+            case 8 :
+            case 9 ://不能选择
+                menu.css = menu.hover = "menu3_1"; break;
+            case 4 ://刷新
+                menu.property = { onmouseup: function(){ location.reload(); } }; break;
+            case 21 :
+            case 22 :
+            case 23 :
+            case 24 :
+            case 25 ://"查看"子菜单
+                menu.property = { onmouseup: function(){ Select([21,22,23,24,25], id, "menu3_3"); } }; break;
+            case 31 :
+            case 32 :
+            case 33 :
+            case 34 ://"排列图标"子菜单1
+                menu.property = { onmouseup: function(){ Select([31,32,33,34], id, "menu3_3"); } }; break;
+            case 36 :
+            case 37 :
+            case 38 ://"排列图标"子菜单2
+                menu.property = { onmouseup: function(){ Select([36,37,38], id, "menu3_4"); } }; break;
+        }
+    });
+    var fm3 = new FixedMenu(["idContainer3", "idContainer3_2"], {
+        Menu: menu3, Delay: 0, Hover: "on3",
+        Fixed: { Align: "right", vAlign: "clienttop", CustomTop: -4, CustomLeft: -2, Adaptive: true, Reset: true }
+    });
+    var area = $$("idArea"), container3 = $$("idContainer3"), container3_2 = $$("idContainer3_2");
+    function Hide(){
+        fm3.Hide(); container3.style.display = "none";
+    }
+    function Select(group, id, css){
+        Hide();
+        var menu = [];
+        forEach(group, function(i){
+            i !== id && menu.push({ "id": i, "css": "", "hover": "on3" });
+        });
+        menu.push({ "id": id, "css": css, "hover": css + " on3" });
+        fm3.Edit(menu);
+    }
+    addEvent(area, "contextmenu", function(e){
+        with(container3.style){
+            left = e.pageX + "px"; top = e.pageY + "px"; display = "block";
+        }
+        e.preventDefault();
+    });
+    container3.oncontextmenu = container3_2.oncontextmenu = function(e){ fixEvent(e).preventDefault(); }
+    container3.onselectstart = container3_2.onselectstart = function(){ return false; }//ie chrome safari
+    addEvent(container3, "mouseup", function(e){ e.stopPropagation(); });
+    addEvent(document, "mouseup", Hide);
+    addEvent(window, "blur", Hide);
+</script>
+<br>
+仿淘宝拼音索引菜单： <br>
+<br>
+<style type="text/css">
+    .container4 li, .container4_2 li{ list-style:none;}
+    .container4 ul, .container4_2{margin:0;}
+    .container4 {width:350px;padding:7px 10px;font:12px Verdana;border:1px solid #ccc;background:#fffeed; line-height:15px;height:15px; _overflow:hidden;}
+    .container4 li {float:left;padding:0 10px; border-right:1px solid #ccc; }
+    .container4 div {float:left;color:#000;padding-right:10px;}
+    /* www.jb51.net */
+    li.menu4 {position:relative;margin-left:-1px; top:-1px; z-index:9999;border:1px solid #85ccff; border-bottom:0; padding-bottom:8px; color:#ff6026; background:#dbf3ff;}
+    .container4_2 {width:350px;padding:10px;border:1px solid #85ccff;background:#dbf3ff;line-height:25px;font-size:14px; font-weight:bold;display:none;}
+    .container4_2 a{ display:block;_zoom:1;}
+    .container4_2 a:link, .container4_2 a:visited, .container4_2 a:active {color:#565553;text-decoration: none;}
+    .container4_2 a:hover {color:#ff5500;text-decoration: underline;}
+    .container4 a:link, .container4 a:visited, .container4 a:hover, .container4 a:active {color:#565553;text-decoration: none;}
+    .menu4 a:link, .menu4 a:visited, .menu4 a:active {color:#ff6026;}
+    .menu4 a:hover{color:#ff6026;text-decoration:underline;}
+</style>
+<div id="idContainer4" class="container4">
+    <div><b>Tag索引</b></div>
+    <ul id="idMenu4">
+        <li id="idMenu4_1"><a href="#">Table</a></li>
+        <li id="idMenu4_2"><a href="#">Fixed</a></li>
+        <li id="idMenu4_3"><a href="#">Color</a></li>
+        <li id="idMenu4_4"><a href="#">Date</a></li>
+        <li id="idMenu4_5"><a href="#">Select</a></li>
+    </ul>
+</div>
+<ul id="idContainer4_2" class="container4_2">
+    <li id="idMenu4_11"><a href="#">Table行定位效果</a></li>
+    <li id="idMenu4_12"><a href="#">Table排序</a></li>
+    <li id="idMenu4_21"><a href="#">浮动定位提示效果</a></li>
+    <li id="idMenu4_22"><a href="#">仿LightBox内容显示效果</a></li>
+    <li id="idMenu4_31"><a href="#">颜色梯度和渐变效果</a></li>
+    <li id="idMenu4_41"><a href="#">blog式日历控件</a></li>
+    <li id="idMenu4_42"><a href="#">日期联动选择器</a></li>
+    <li id="idMenu4_51"><a href="#">多级联动select</a></li>
+</ul>
+<br>
+<br>
+<script>
+    var menu4 = [
+        { id: 1, parent: 0, elem: 'idMenu4_1', active: "menu4" },
+        { id: 2, parent: 0, elem: 'idMenu4_2', active: "menu4" },
+        { id: 3, parent: 0, elem: 'idMenu4_3', active: "menu4" },
+        { id: 4, parent: 0, elem: 'idMenu4_4', active: "menu4" },
+        { id: 5, parent: 0, elem: 'idMenu4_5', active: "menu4" },
+        { id: 11, parent: 1, elem: 'idMenu4_11' },
+        { id: 12, parent: 1, elem: 'idMenu4_12' },
+        { id: 21, parent: 2, elem: 'idMenu4_21' },
+        { id: 22, parent: 2, elem: 'idMenu4_22' },
+        { id: 31, parent: 3, elem: 'idMenu4_31' },
+        { id: 41, parent: 4, elem: 'idMenu4_41' },
+        { id: 42, parent: 4, elem: 'idMenu4_42' },
+        { id: 51, parent: 5, elem: 'idMenu4_51' }
+    ];
+    new FixedMenu([ { id: "idContainer4", menu: "idMenu4" }, "idContainer4_2" ], {
+        Menu: menu4, FixedMenu: false,
+        Fixed: { Align: "clientleft", vAlign: "bottom", CustomTop: -1 }
+    });
+</script>
+</body>
+</html>

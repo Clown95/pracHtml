@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>无限轮换图片</title>
+    <style>
+        *{
+            margin:0;
+            padding:0
+        }
+        li{list-style:none}
+        a{
+            color:#0a8cd2;
+            text-decoration:none;
+            cursor: pointer
+        }
+        #wrapper{
+            overflow:hidden;
+            position:relative;
+            width:800px;
+            height: 210px;
+            margin:0px auto;
+            text-align:center
+        }
+        #scroll-list li{
+            float:left;
+            width: 800px
+        }
+        #scroll-list img{
+            width: 800px;
+            height: 210px
+        }
+        .ico-box{
+            position:absolute;
+            left:0;
+            bottom:20px;
+            width:100%;
+            text-align:center
+        }
+        .ico-box a{
+            display:inline-block;
+            width:10px;
+            height:10px;
+            margin-right:8px;
+            border-radius:50%;
+            background-color:#AEB4BA;
+            opaticy:0.5
+        }
+        .ico-box .active{
+            display:inline-block;
+            width:10px;
+            height:10px;
+            border-radius:50%;
+            background-color:#fff
+        }
+        .left-btn,
+        .right-btn{
+            position:absolute;
+            top:50%;
+            width:50px;
+            height:50px;
+            margin-top:-25px
+        }
+        .left-btn{
+            background:url(images/ctrl/carouselCtrl.png) 0 0 no-repeat;
+            left:0
+        }
+        .right-btn{
+            background:url(images/ctrl/carouselCtrl.png) -50px 0 no-repeat;
+            right:0
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <ul id="scroll-list" style="position: absolute;top: 0;left:0;width: 8000px;">
+        <li>
+            <a><img src="images/1.jpg"></a>
+        </li>
+        <li>
+            <a><img src="images/3.jpg"></a>
+        </li>
+        <li>
+            <a><img src="images/1.jpg"></a>
+        </li>
+        <li>
+            <a[/img]><img src="images/2.jpg"></a>
+        </li>
+        <li>
+            <a[/img]><img src="images/1.jpg"></a>
+        </li>
+    </ul>
+    <div id="ico" class="ico-box"></div>
+    <a id="prev" class="left-btn"></a>
+    <a id="next" class="right-btn"></a>
+</div>
+<script>
+    "use strict";
+    (function () {
+        var ul = document.getElementById('scroll-list');
+        ul.innerHTML += ul.innerHTML;
+        var wrap = document.getElementById('wrapper'),
+                li = ul.getElementsByTagName('li'),
+                prev = document.getElementById('prev'),
+                next = document.getElementById('next'),
+                ico = document.getElementById('ico'),
+                ico_a = document.getElementById('ico').getElementsByTagName('a'),
+                l = li.length,
+                len = li.length / 2,
+                li_w = li[0].offsetWidth,
+                timer = null,
+                curr = 0;
+        (function(){
+            var str = "";
+            for (var i = 0; i < len; i += 1) {
+                if (i === curr) {
+                    str += "<a class='active'index='" + i + "'></a>";
+                } else {
+                    str += "<a index='" + i + "'></a>";
+                }
+            }
+            ico.innerHTML = str;
+        })();
+
+        function autoNext() {
+            next.onclick();
+        }
+
+        timer = setInterval(autoNext, 3000);
+        wrap.onmouseover = function () {
+            clearInterval(timer);
+
+            document.onkeydown = function (e) {
+                e = e || window.event;
+                if (e.keyCode === 39 || e.keyCode === 40) {
+                    next.onclick();
+                } else if (e.keyCode === 37 || e.keyCode === 38) {
+                    prev.onclick();
+                }
+            }
+        };
+        wrap.onmouseout = function () {
+            timer = setInterval(autoNext, 3000);
+            document.onkeydown = null;
+        };
+        /*
+         *@function:指定当前tab值,设置特殊css样式
+         *@param:index--索引值
+         *@return：无
+         */
+        function tab(index) {
+            for (var i = 0; i < len; i += 1) {
+                ico_a[i].className = "";
+            }
+            ico_a[index].className = "active";
+        }
+        /*
+         *@function:获取对象的css属性值
+         *@param:obj--DOM对象
+         *       attr--css属性（这里为left)
+         *@return：DOM对象的属性值
+         */
+        function css(obj, attr) {
+            if (obj.currentStyle) {
+                return obj.currentStyle[attr];//IE
+            } else {
+                return getComputedStyle(obj, false)[attr];//非IE
+            }
+        }
+        /*
+         *@function:让列表（ul）位置从起始位置，变化到目标（target）位置
+         *@param:obj--被改变对象（这里固定为ul）
+         *       attr--css属性（这里为left)
+         *       target--目标值
+         *@return：无
+         */
+        function act(obj, attr, target) {
+
+            if (obj.timer !== null && obj.timer !== undefined) {
+                clearInterval(obj.timer);
+            }//obj.timer && clearInterval(obj.timer);
+
+            obj.timer = setInterval(function () {
+
+                var cur = parseInt(css(obj, attr));
+                var speed = (target - cur) / 8;
+                speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+
+                if (cur !== target) {
+
+                    obj.style[attr] = cur + speed + 'px';
+                } else {
+
+                    clearInterval(obj.timer);
+                    obj.timer = null;
+                }
+
+            }, 30);
+        }
+        /*
+         *@function:1.指定当前tab点，2.让列表滚动到指定位置
+         *@param:无
+         *@return：无
+         */
+        function scroll() {
+
+            tab(curr % len);
+
+            act(ul, 'left', -curr * li_w);
+        }
+        //向左按钮点击事件
+        prev.onclick = function () {
+
+            if (curr > 0) {
+                curr -= 1;
+            } else {
+                curr = len - 1;
+                ul.style.left = -len * li_w + "px";
+            }
+
+            scroll();
+        };
+        //向右按钮点击事件
+        next.onclick = function () {
+
+            if (curr < l - 1) {
+                curr += 1;
+            } else {
+                curr = len;
+                ul.style.left = -(curr - 1) * li_w + "px";
+            }
+
+            scroll();
+        };
+        /*
+         ico.onmouseover = function (e) {
+         ico.timer = setInterval(ico.onclick, 3000);
+         };
+         ico.onmouseout = function () {
+         clearInterval(ico.timer);
+         };*/
+        //tab点击事件
+        ico.onclick = function (e) {
+
+            e = e || window.event;
+            var target = e.target || e.srcElement;
+            var tagName = target.tagName;
+            var index;
+
+            if (tagName === "A") {
+
+                index = Number(target.getAttribute("index")); //如果是纯数字，用number比parseInt高效一点，或者+
+
+                //因为tab索引只有0~len-1,而curr:0~2*len-1;所以当前位置在ul复制区域时，点击tab，索引值应该加上len
+                if (curr >= len) {
+                    curr = len + index;
+                } else {
+                    curr = index;
+                }
+                scroll();
+            }
+        };
+
+    }());
+
+</script>
+</body>
+</html>

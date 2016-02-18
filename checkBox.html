@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>反向选择</title>
+    <script type="text/javascript">
+        function fanCh(input1){
+            var checkForm=document.getElementById(input1);//获取到表单，才能对他进行操作
+            var formlen=checkForm.length;
+            for(var i=0;i<formlen;i++){
+                if(checkForm.elements[i].value=='checkbox'){//此处可以是获取元素的name,value,id等相同的元素赋值，一遍保证能对input复选框有相同的操作
+                    if(checkForm.elements[i].checked){
+                        checkForm.elements[i].checked=false;
+                    }
+                    else{
+                        checkForm.elements[i].checked=true;
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<form id="form1" name="form1">
+    <table border="1" cellspacing="0">
+        <col  width="150px"/>
+        <colgroup span="1" width="50px"/>
+        <tr style="background: #ccc"><td><input id="checkAll" type="checkbox" name="checkAll" value="checkbox" onclick="fanCh('form1')"/> 反选择</td><td>&nbsp;</td></tr>
+        <tr><td><input type="checkbox" name="check" value="checkbox"/> 选项1</td><td></td></tr>
+        <tr><td><input type="checkbox" name="check" value="checkbox"/> 选项2</td><td></td></tr>
+        <tr><td><input type="checkbox" name="check" value="checkbox"/> 选项3</td><td></td></tr>
+        <tr><td><input type="checkbox" name="check" value="checkbox"/> 选项4</td><td></td></tr>
+    </table>
+</form>
+
+</body>
+</html>

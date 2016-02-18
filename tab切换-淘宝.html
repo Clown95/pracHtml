@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+        ul li{
+            list-style: none;
+            float: left;
+        }
+        .clear{
+            clear: both;
+        }
+        .mouse-down{
+            background: #b7c6be;!important;
+        }
+        .search-box , .search{
+            display: block;
+            width: 600px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 0 5px 5px;
+        }
+
+        .search-icon{
+            width: 100px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .search *{
+               height: 40px;
+               vertical-align: top;
+
+           }
+        .search input{
+            width: 490px;
+            padding: 0 5px;
+        }
+        .search button{
+            width: 100px;
+            border: 5px;
+        }
+
+        .bg-red{
+            background: #ff0000;
+            color: #ffffff;
+        }
+        .bg-blue{
+            background: blue;
+            color: #ffffff;
+        }
+        .bg-gree{
+            background: green;
+            color: #ffffff;
+        }
+        .bd-red{
+            border: 2px #ff0000 solid;
+        }
+        .bd-blue{
+            border: 2px blue solid;
+        }
+        .bd-gree{
+            border: 2px green solid;
+        }
+    </style>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script>
+        $(function(){
+            $('.search-box a').not(":first").hide();
+            $('.search-box li').mouseover(function () {
+                var index=$(this).index();
+//                alert(index)
+                if(index==0){
+                    $(this).addClass('bg-red');
+                    $('li').eq(1).removeClass('bg-blue');
+                    $(this).siblings('li').eq(1).removeClass('bg-gree');
+                    //蓝色li为第二个；然而兄弟中蓝色是第一个
+                    $('.search-box button').mousedown(function(){
+                        $(this).css('background','lightgray')
+                    });
+
+                    $('.search-box button').mouseup(function(){
+                        $(this).css('background','red')
+                    });
+                }
+                if(index==1){
+                    $(this).addClass('bg-blue');
+                    $('li').eq(0).removeClass('bg-red');
+                    $(this).siblings('li').eq(1).removeClass('bg-gree');
+
+                    $('.search-box button').mousedown(function(){
+                        $(this).css('background','lightgray')
+                    });
+
+                    $('.search-box button').mouseup(function(){
+                        $(this).css('background','blue')
+                    });
+                }
+                if(index==2){
+                    $(this).addClass('bg-gree');
+                    $('li').eq(0).removeClass('bg-red');
+                    $(this).siblings('li').eq(1).removeClass('bg-blue');
+
+                    $('.search-box button').mousedown(function(){
+                        $(this).css('background','lightgray')
+                    });
+
+                    $('.search-box button').mouseup(function(){
+                        $(this).css('background','green')
+                    });
+                }
+                $('.search-box a').eq(index).show().siblings().hide();
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <ul class="search-box">
+        <li class="search-icon bg-red" value="宝贝">宝贝</li>
+        <li class="search-icon" value="店铺">店铺</li>
+        <li class="search-icon" value="天猫">天猫</li>
+    </ul>
+    <div class="clear"></div>
+    <div class="search-box">
+        <a class="search bd-red"><input type="text" placeholder="搜索宝贝"/><button class="bg-red">搜索</button></a>
+        <a class="search bd-blue"><input type="text" placeholder="搜索店铺"/><button class="bg-blue">搜索</button></a>
+        <a class="search bd-gree"><input type="text" placeholder="搜索天猫"/><button class="bg-gree">搜索</button></a>
+    </div>
+</div>
+
+
+</body>
+</html>

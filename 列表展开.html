@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="application/javascript"
+            src="http://s1.bdstatic.com/r/www/cache/static/jquery/jquery-1.10.2.min_f2fb5194.js"></script>
+    <style type="text/css">
+        .slide_show{
+            height: 30px;
+
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>
+        <div class="clearfix slide_show"><span style="float:left">我有列表</span><a style="float:right">+</a></div>
+        <p class="p-silde" style="display:none">
+            <a href="#">列表1</a>
+            <a href="#">列表2</a>
+            <a href="#">列表3</a>
+        </p>
+    </li>
+    <li>
+        <div class="clearfix slide_show"><span style="float:left">我有列表</span><a style="float:right">+</a></div>
+        <p class="p-silde" style="display:none">
+            <a href="#">列表1</a>
+            <a href="#">列表2</a>
+            <a href="#">列表3</a>
+        </p>
+    </li>
+    <li>
+        <div class="clearfix slide_show"><span>我没有列表</span></div>
+    </li>
+</ul>
+<script>
+    $(function(){
+        show_obj('.slide_show','.slide_show a','.p-silde');
+    })
+</script>
+</body>
+<script>
+    var show_obj = function(obj,at,ob){
+        $(obj).bind('click', function(){
+            var showTxt = $(this).children(at);
+//alert($(at).html());
+//alert(sObj);
+//alert();
+//alert($(this).parent().children(p).html());
+            if(showTxt.html() == '+'){
+                showTxt.html('-')
+            }else{
+                showTxt.html('+')
+            }
+            $(this).parent().children(ob).slideToggle(300);
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>JS分页</title>
+</head>
+<body onload="CreatePager(10,10,204,'?page=14',10)">
+<div id='pager'></div>
+</body>
+<script type="text/javascript">
+    //pageSize,每页显示多少条记录,currentPage当前页,recordCount共有多少条记录,url页面路径，必须带有page参数,numCount，每页显示多少个分页数字
+    var CreatePager=function(pageSize,currentPage,recordCount,url,numCount){
+//创建一个链接
+        var CreateHref=function(url,page,p_ele,t,currentPage){
+            var a=document.createElement('a');
+            var reg=new RegExp("page=\\d+");
+            url=url.replace(reg.exec(url),'page='+page)
+            a.setAttribute('href',url);
+            a.setAttribute('class',currentPage==page?'current':'not-current');
+            var t=document.createTextNode(t);
+            a.appendChild(t);
+            document.getElementById(p_ele).appendChild(a);
+        }
+//计算属于哪个区间
+        var GetNumArea=function(num,numCount,pageCount){
+            var currentArea=parseInt((num-1)/numCount)+1;
+            var lastArea=parseInt((pageCount-1)/numCount)+1;
+            this.minNum=(currentArea-1)*numCount+1;
+            var tempTaxNumber=currentArea*numCount+1;
+            this.maxNum=tempTaxNumber>pageCount?pageCount:tempTaxNumber;
+            this.preAreaNum=currentArea<=1?1:this.minNum-1;
+            this.afterAreaNum=currentArea>=lastArea?pageCount:this.maxNum+1;
+        }
+        var pageCount=0;//总页数
+        pageCount=recordCount%pageSize===0?recordCount/pageSize:parseInt(recordCount/pageSize)+1;//总页数
+// var pager=document.getElementById('pager');//获取分页的元素
+// var pageSummary=document.createElement('span');//创建一个DIV，在里面显示第几页共几页
+// var summaryContent=document.createTextNode('第'+currentPage+'页共'+pageCount+'页');
+// pageSummary.appendChild(summaryContent);
+// pager.appendChild(pageSummary);
+        CreateHref(url,1,'pager','首页',currentPage);//添加首页链接
+        CreateHref(url,new GetNumArea(currentPage,numCount,pageCount).preAreaNum,'pager','<<',currentPage);//添加前面的省略号
+//显示分页数字 开始
+        var pageArea = pageCount / numCount;// 页码区间
+        if(pageCount<numCount){
+            for(i=1;i<=pageCount;i++){
+                CreateHref(url,i,'pager',i,currentPage);
+            }
+        }else{
+            currentPage=currentPage>=pageCount?pageCount:currentPage;
+            var minNum=new GetNumArea(currentPage,numCount,pageCount).minNum;
+            var maxNum=new GetNumArea(currentPage,numCount,pageCount).maxNum;
+            for(i=minNum;i<maxNum;i++){
+                CreateHref(url,i,'pager',i,currentPage);
+            }
+        }
+//显示分页数字 结束
+        CreateHref(url,new GetNumArea(currentPage,numCount,pageCount).afterAreaNum,'pager','>>',currentPage);//显示分页后面的省略号
+        CreateHref(url,pageCount,'pager','末页',currentPage);//添加末页链
+    }
+</script>
+</html>
+<style type="text/css">
+    body{font-size:15px;}
+    #pager{ height:25px;width:500px; margin: 100px auto;}
+    #pager a{height:30px; line-height:30px; border:1px solid #ccc; padding-left:0.4em; padding-right:0.4em;
+        text-decoration:none; display:block; float:left; margin:0px 3px;}
+    #pager a:hover{background-color:#1f3a87; color:#fff; text-decoration:none;}
+    .not-current{background-color:#fff; color:#1f3a87;}
+    .current{background-color:#1f3a87; color:#fff; text-decoration:none;}
+</style>

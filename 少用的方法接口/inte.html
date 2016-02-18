@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        strong{
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+<p>btoa()方法，字符串String类型变量，返回为空，属于Window对象</p>
+<strong>实例:</strong>
+<button onclick="do_btoa()">btoa(abcdef)后输出值</button>
+<button onclick="do_atob()">btoa(YWJjZGVm)后输出值</button>
+<p><strong>分析：</strong>javascript
+    使用btoa和atob来进行Base64转码和解码..javascript原生的api本来就支持,Base64,但是由于之前的javascript局限性，导致Base64基本中看不中用。当前html5标准正式化之际，Base64将有较大的转型空间,对于Html5 Api中出现的如FileReader Api, 拖拽上传,甚至是Canvas,Video截图都可以实现。<span style="color: #ff0000">Base64转码的对象只能是字符串，因此来说，对于其他数据还有这一定的局限性，在此特别需要注意的是对Unicode(如：中国，汉字)转码。</span></p>
+<p><strong>支持汉字解决办法</strong>很明显，这种方式是不行的，那么如何让他支持汉字呢，这就要使用window.encodeURIComponent和window.decodeURIComponent</p>
+<strong>实例:</strong>
+<button onclick="hz_btoa()">btoa(中国你好)后输出值</button>
+<button onclick="hz_atob()">btoa(已经编码的字符串)后输出值</button>
+<p>
+    <strong>结果:</strong>
+    <span id="re_btoa"></span></p>
+<hr/>
+<script>
+    function do_btoa(){
+        var a='abcdef';
+        document.getElementById('re_btoa').innerHTML=btoa(a);
+    }
+    function do_atob(){
+        var a='YWJjZGVm';
+        document.getElementById('re_btoa').innerHTML=window.atob(a);
+    }
+    function hz_btoa(){
+        var a='中国你好';
+        document.getElementById('re_btoa').innerHTML=window.btoa(window.encodeURIComponent(a));
+    }
+    function hz_atob(){
+        var a='JUU0JUI4JUFEJUU1JTlCJUJEJUU0JUJEJUEwJUU1JUE1JUJE';
+        document.getElementById('re_btoa').innerHTML=window.decodeURIComponent(atob(a));
+
+        //声明一个JSON对象
+        var peole={
+            "name":"luofang",
+            "age":"23",
+            "from":"china",
+            "hometown":"hunan",
+            "favorite":["a","b","c"]
+        }
+    }
+</script>
+</body>
+</html>

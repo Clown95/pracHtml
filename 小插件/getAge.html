@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script language=javascript>
+    function   ages(str)
+    {
+        var   r   =   str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+        if(r==null)return   false;
+        var   d=   new   Date(r[1],   r[3]-1,   r[4]);
+        if   (d.getFullYear()==r[1]&&(d.getMonth()+1)==r[3]&&d.getDate()==r[4])
+        {
+            var   Y   =   new   Date().getFullYear();
+            return("年龄   =   "+   (Y-r[1])   +"   周岁");
+        }
+        return("输入的日期格式错误！");
+    }
+    alert(ages("1980-03-22"));
+    alert(ages("2002-01-31"));
+    alert(ages("2002-01-41"));
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <base href="www.w3cfuns.com"/>
+    <style>
+        * {
+            word-wrap: break-word;
+        }
+
+        body, div, table, tr, td {
+            margin: 0;
+            padding: 0;
+            word-wrap: break-word;
+            font-family: verdana, arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        table {
+            empty-cells: show;
+            border-collapse: collapse;
+        }
+
+        .atd {
+            margin: 15px auto;
+        }
+
+        tbody {
+            display: table-row-group;
+            vertical-align: middle;
+            border-color: inherit;
+        }
+
+        tr {
+            display: table-row;
+            vertical-align: middle;
+            border-color: inherit;
+        }
+
+        .atd td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .atd a {
+            display: block;
+        }
+
+        .atd .atdc {
+            display:none;
+            position: relative;
+            margin: 0 auto 10px;
+            width: 20px;
+            height: 50px;
+        }
+
+        .atd .ac2 {
+            background: #ac0;
+        }
+
+        .atdc div {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 20px;
+            text-align: left;
+        }
+
+        .atdc em {
+            position: absolute;
+            margin: -20px 0 0 0;
+            width: 20px;
+            font-size: 11px;
+            text-align: center;
+            color: #747474;
+        }
+        .mbm{margin-bottom:10px !important;}
+        .xs1{font-size:12px !important;}
+        .cl:after{content:" ";display:block;height:0;clear:both;visibility:hidden;}
+        .cl{zoom:1;}
+        #trace_div #trace_ul.mls li{
+            width: 64px;
+        }
+        .ml li{
+            float: left;
+            text-align: center;
+            overflow: hidden;
+        }
+        .ml img{
+            display: block;margin: 0 auto;
+        }
+        .mls li{
+            padding: 0 0 5px;
+            width: 66px;
+        }
+        .mls .avt{
+            display: block;
+            margin: 0 auto;
+            width: 54px;
+        }
+        .mls img{
+            width: 48px;
+            height: 48px;
+        }
+        .mls p{
+            margin-top: 5px;
+        }
+        ul{
+            margin: 0;
+            padding: 0;
+        }
+        ul li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div id="click_div">
+    <table cellpadding="0" cellspacing="0" class="atd">
+        <tbody>
+        <tr>
+            <td>
+                <a>
+                    <div class="atdc">
+                        <div class="ac2" style="height:50px;">
+                            <em>1</em>
+                        </div>
+                    </div>
+                    <img src="images/02.gif" alt="小困惑" data-bd-imgshare-binded="1"><br>小困惑</a>
+            </td>
+            <td>
+                <a>
+                    <div class="atdc">
+                        <div class="ac2" style="height:50px;">
+                            <em>1</em>
+                        </div>
+                    </div>
+                    <img src="images/12.gif" alt="我想想" data-bd-imgshare-binded="1"><br>我想想</a>
+            </td>
+            <td>
+                <a>
+                    <div class="atdc">
+                    <div class="ac2" style="height:50px;">
+                        <em>1</em>
+                    </div>
+                </div>
+                    <img src="images/17.gif" alt="好笔记" data-bd-imgshare-binded="1"><br>好笔记</a>
+            </td>
+            <td>
+                <a>
+                    <div class="atdc">
+                        <div class="ac2" style="height:50px;">
+                            <em>1</em>
+                        </div>
+                    </div>
+                    <img src="images/14.gif" alt="学到啦" data-bd-imgshare-binded="1"><br>学到啦</a>
+            </td>
+            <td>
+                <a>
+                    <div class="atdc">
+                        <div class="ac2" style="height:50px;">
+                            <em>1</em>
+                        </div>
+                    </div>
+                    <img src="images/20.gif" alt="赶紧学" data-bd-imgshare-binded="1"><br>赶紧学</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h3 class="mbm xs1">
+        刚表态过的朋友 (<a href="javascript:;" onclick="show_click('blogid', '5411755', '5')">1 人</a>)
+    </h3>
+
+    <div id="trace_div" class="xs1">
+        <ul id="trace_ul" class="ml mls cl">
+            <li>
+                <div class="avt"><a target="_blank" title="我想想"><img
+                        src="images/20.gif"
+                        data-bd-imgshare-binded="1"></a></div>
+                <p><a title="Camill_e" target="_blank">Camill_e</a></p>
+            </li>
+            <li>
+                <div class="avt"><a target="_blank" title="我想想"><img
+                        src="images/02.gif"
+                        data-bd-imgshare-binded="1"></a></div>
+                <p><a title="Camill_e" target="_blank">Camill_e</a></p>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--没有实现-->
+<script>
+    var atdc=document.getElementsByClassName('atdc');
+    var clicki=document.getElementById('click_div').getElementsByTagName('td');
+    var clicklen=clicki.length;
+        if(clicki.onclick){
+            clicki.onclick= function () {
+                alert('hello')
+            }
+//        clicki[i].onclick=function doit(){
+//                --i;
+//                atdc[i].style.display='block';
+//        }
+    }
+</script>
+
+</body>
+</html>
