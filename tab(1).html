@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>练习tab切换并输出tab的值</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css"/>
+    <style type="text/css">
+        .selected{
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .selected a{
+            color: #ff0000;
+        }
+        .clear{
+            clear: both;
+        }
+        .chosed{
+            display: block;
+            width: 100%;
+            height: 30px;
+            border: 1px solid #ff0000;
+            line-height: 30px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <ul class="selectes">
+            <li class="selected">
+                <a>step1</a>
+            </li>
+            <li>
+                <a>step2</a>
+            </li>
+            <li>
+                <a>step3</a>
+            </li>
+            <li>
+                <a>step4</a>
+            </li>
+            <li>
+                <a>step5</a>
+            </li>
+        </ul>
+        <div class="clear"></div>
+        <span class="chosed"></span>
+    </div>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script>
+        $('.chosed').html("您现在已经进行到"+$('.selected').html())
+        $('.selectes  a').click(function(){
+            $(".selectes li").removeClass();
+            $(this).parents('li').addClass('selected');
+//            alert($('.chosed').html())
+            $('.chosed').html('您现在已经进行到'+$('.selected').html());
+        })
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- http://www.webkfa.com -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>HTML5手机页面触屏滑动上下翻页特效</title>
+<meta charset="utf-8">
+<meta name="apple-touch-fullscreen" content="YES">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="pragram" content="no-cache">
+<link rel="stylesheet" type="text/css" href="./hamer_files/main.css">
+<link rel="stylesheet" type="text/css" href="./hamer_files/endpic.css">
+<script type="text/javascript" src="./hamer_files/offline.js"></script>
+<meta name="viewport" content="width=640, user-scalable=no, target-densitydpi=device-dpi">
+    <style type="text/css">
+        ul{
+            float: left;
+            display: block;
+        }
+        .list li{
+            float: left;
+            margin: 5px 10px;
+        }
+        .list1{
+            float: right;
+            margin: 10px 12px 0 0;
+        }
+        .list2{
+            margin: 20px;
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+
+<body class="s-bg-ddd pc no-3d perspective yes-3d" style="-webkit-user-select: none;">
+    <section class="u-alert">
+        <img style="display:none;" src="./hamer_files/loading_large.gif">
+        <div class="alert-loading z-move">
+            <div class="cycleWrap">
+                <span class="cycle cycle-1"></span>
+                <span class="cycle cycle-2"></span>
+                <span class="cycle cycle-3"></span>
+                <span class="cycle cycle-4"></span>
+            </div>
+            <div class="lineWrap">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </div>
+        </div>
+    </section>
+    <section class="u-arrow">
+        <p class="css_sprite01"></p>
+    </section>
+    <section class="p-ct transformNode-2d transformNode-3d" style="height: 918px;">
+        <div style="height: 100px;border-bottom: #141414 2px solid;z-index: 100;background: rgba(1, 0, 6, 0.60)">
+            <div id="logo" style="float: left;height:inherit;width: 235px">
+                <img style="margin: 15px 0 0 12px" src="hamer_files/logo.png">
+            </div>
+            <nav style="float: right;height: inherit;width: auto;font-size: 14px">
+                <ul class="list list1">
+                    <li><a>登录</a></li>
+                    <li><a>注册</a></li>
+                </ul>
+                <br>
+                <ul class="list list2">
+                    <li>欢迎访问上海慧巨网络科技有限公司</li>
+                    <!--<li>联系方式</li>-->
+                    <!--<li>新闻动态</li>-->
+                    <!--<li>建筑法规</li>-->
+                </ul>
+            </nav>
+        </div>
+        <div class="translate-back" style="height: 818px;overflow: hidden">
+            <div class="m-page m-fengye" data-page-type="info_pic3" data-statics="info_pic3" style="height: 918px;">
+                <div class="page-con lazy-finish" data-position="50% 50%" data-size="cover" style="height: 920px; background-image: url(hamer_files/1.jpg); background-size: cover; background-position: 50% 50%;">
+                    <article style="color: #000;line-height:35px;margin:10%">
+                        <h1 style="width: 100%;text-align: center;">慧巨网络</h1>
+                        <img style="width: 100%;height: 200px;margin: 15px 0" src="hamer_files/7.jpg">
+                        <p>上海慧巨网路有限公司位于上海市浦东新区张江高科开发区，是家拥有北美背景的移动互联网O2O云计算公司。</p>
+
+                        <p> 我们的核心业务是基于云计算的大数据处理的数据挖掘和数据分析。 基于传统企业;的业务，帮助传统企业实现互联网+的未来发展。公司从成立以来一直本着为以人文本的宗旨，致力于移动互联网O2O、云计算技术、传统企业业务的互联网+发展。</p>
+
+                        <p> 目前，公司的主要核心业务是基于云计算的大数据处理以及传统企业的互联网+业务。我们致力于发展基于云计算的企业级的O2O业务。从挖掘需求到量身定制产品和服务，帮助企业真正的实现自身或其产品的互联网+的发展。我们真诚的希望各有志企业以及优秀人才可以加入我们的行列，与我们共同为大数据云计算和互联网+的事业共同努力。我们也诚挚邀请各相关企业对我们进行监督与指正，帮助我们更好的发展自己。同时，我们也热切希望各优秀企业可以与我们合作，互通有无，共同发展、共同进步。
+
+                        </p>
+
+                    </article>
+                </div>
+            </div>
+            <div class="m-page m-bigTxt f-hide" data-page-type="bigTxt" data-statics="info_list" style="height: 918px;">
+                <div class="page-con j-txtWrap lazy-finish" data-position="50% 50%" data-size="cover" style="background-image: url(hamer_files/2.jpg); background-size: cover; background-position: 50% 50%;">
+                    <article style="color: #000;line-height:35px;margin:10%">
+                        <h1 style="width: 100%;text-align: center;">慧巨网络</h1>
+                        <img style="width: 100%;height: 200px;margin: 15px 0" src="hamer_files/7.jpg">
+                        <p>上海慧巨网路有限公司位于上海市浦东新区张江高科开发区，是家拥有北美背景的移动互联网O2O云计算公司。</p>
+
+                        <p> 我们的核心业务是基于云计算的大数据处理的数据挖掘和数据分析。 基于传统企业;的业务，帮助传统企业实现互联网+的未来发展。公司从成立以来一直本着为以人文本的宗旨，致力于移动互联网O2O、云计算技术、传统企业业务的互联网+发展。</p>
+
+                        <p> 目前，公司的主要核心业务是基于云计算的大数据处理以及传统企业的互联网+业务。我们致力于发展基于云计算的企业级的O2O业务。从挖掘需求到量身定制产品和服务，帮助企业真正的实现自身或其产品的互联网+的发展。我们真诚的希望各有志企业以及优秀人才可以加入我们的行列，与我们共同为大数据云计算和互联网+的事业共同努力。我们也诚挚邀请各相关企业对我们进行监督与指正，帮助我们更好的发展自己。同时，我们也热切希望各优秀企业可以与我们合作，互通有无，共同发展、共同进步。
+
+                        </p>
+
+                    </article>
+                </div>
+            </div>
+            <div class="m-page m-bigTxt f-hide" data-page-type="bigTxt" data-statics="info_list" style="height: 918px;">
+                <div class="page-con j-txtWrap lazy-finish" data-position="50% 50%" data-size="cover" style="background-image: url(hamer_files/3.jpg); background-size: cover; background-position: 50% 50%;">
+                    <article style="color: #000;line-height:35px;margin:10%">
+                        <h1 style="width: 100%;text-align: center;">慧巨网络</h1>
+                        <img style="width: 100%;height: 200px;margin: 15px 0" src="hamer_files/7.jpg">
+                        <p>上海慧巨网路有限公司位于上海市浦东新区张江高科开发区，是家拥有北美背景的移动互联网O2O云计算公司。</p>
+
+                        <p> 我们的核心业务是基于云计算的大数据处理的数据挖掘和数据分析。 基于传统企业;的业务，帮助传统企业实现互联网+的未来发展。公司从成立以来一直本着为以人文本的宗旨，致力于移动互联网O2O、云计算技术、传统企业业务的互联网+发展。</p>
+
+                        <p> 目前，公司的主要核心业务是基于云计算的大数据处理以及传统企业的互联网+业务。我们致力于发展基于云计算的企业级的O2O业务。从挖掘需求到量身定制产品和服务，帮助企业真正的实现自身或其产品的互联网+的发展。我们真诚的希望各有志企业以及优秀人才可以加入我们的行列，与我们共同为大数据云计算和互联网+的事业共同努力。我们也诚挚邀请各相关企业对我们进行监督与指正，帮助我们更好的发展自己。同时，我们也热切希望各优秀企业可以与我们合作，互通有无，共同发展、共同进步。
+
+                        </p>
+
+                    </article>
+                </div>
+            </div>
+            <div class="m-page m-bigTxt f-hide" data-page-type="bigTxt" data-statics="info_list" style="height: 918px;">
+                <div class="page-con j-txtWrap lazy-finish" data-position="50% 50%" data-size="cover" style="background-image: url(hamer_files/4.jpg); background-size: cover; background-position: 50% 50%;"></div>
+            </div>
+            <div class="m-page m-bigTxt f-hide" data-page-type="bigTxt" data-statics="info_list" style="height: 918px;">
+                <div class="page-con j-txtWrap lazy-finish" data-position="50% 50%" data-size="cover" style="background-image: url(hamer_files/5.jpg); background-size: cover; background-position: 50% 50%;"></div>
+            </div>
+
+            
+        </div>
+    </section>
+    <section class="u-pageLoading">
+        <img src="./hamer_files/load.gif" alt="loading">
+    </section>
+
+    <script src="./hamer_files/init.mix.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./hamer_files/coffee.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./hamer_files/99_main.js" type="text/javascript" charset="utf-8"></script>
+
+
+</body></html>

@@ -1,0 +1,10 @@
+html,body,*{
+    margin: 0;
+    padding: 0;
+}
+ul li{
+    list-style: none;
+    float: left;
+    cursor: pointer;
+    min-width: 100px;
+}

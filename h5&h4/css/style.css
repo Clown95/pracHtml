@@ -1,0 +1,130 @@
+*{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+body,html{
+    width: 100%;
+    height: 100%;
+}
+.clear{
+    clear: both;
+}
+
+/*左侧导航栏*/
+aside dl dt{
+    /*font-weight: bolder;*/
+    font-size: large;
+    padding: 5px 0;
+}
+aside dl dd{
+    text-indent: 1em;
+    font-size: small;
+}
+#aside_wrap{
+    width: 15%;
+    min-width: 200px;
+    height: 80%;
+    float: left;
+    padding-top: 2%;
+    padding-left: 2%;
+    background:-webkit-gradient(linear,left top,100% 90%,from(#9359b2),to(#f2e1ff) );
+    background: -moz-linear-gradient(top,#9359b2,#f2e1ff);
+    background: -o-linear-gradient(top,#9359b2,#f2e1ff);
+    background: -ms-linear-gradient(top,#9359b2,#f2e1ff);
+    background: linear-gradient(to bottom,#9359b2,#f2e1ff); !important;
+}
+aside{
+    padding-left:25px;
+}
+dl{
+    margin-top: 30px;
+}
+dl a{
+    color: white;
+    line-height: 28px;
+    text-decoration: none;
+}
+/*主题内容部分*/
+header{
+    width: 100%;
+    height: 120px;
+    background: #9359b2;
+    overflow: hidden;
+    border-bottom: solid #900ae8;
+    border-bottom-color: #2b023e;
+}
+header h1{
+    line-height: 100px;
+    color: white;
+    font-family: '迷你简汉真广标 regular', '迷你简汉真广标';
+    padding-left: 50px;
+}
+#wrap{
+    width: 95%;
+    height: 80%;
+}
+#article_wrap{
+    position: relative;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    width: auto;
+    height:95%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    /*background: #2b023e;*/
+}
+
+article h1,h2,h3{
+    margin: 15px auto;
+}
+article p{
+    font-size: 16px;
+    line-height: 30px;
+    text-indent: 2em;
+    margin: 15px auto;
+}
+#article-1{
+    /*opacity: 0;*/
+    position: relative;
+    width: auto;
+    top: 0;
+    left: 0;
+}
+article h1{
+
+}
+article h2{
+    background: linear-gradient(to right,#BE9AD1 0%,#9D67BA 15%,#ffffff 100% );
+    transition:color 5ms;
+}
+article h2:hover{
+    color: #ffffff;
+}
+#article-2{
+     /*z-index: 10;*/
+    /*opacity: 0;*/
+     position: relative;
+     width: auto;
+     top: 0;
+     left: 0;
+ }
+#article-3{
+    /*z-index: 10;*/
+    /*opacity: 0;*/
+    position: relative;
+    width: auto;
+    top: 0;
+    left: 0;
+}
+
+/*引导上下页面标签*/
+.pre{
+    margin: 30px auto;
+    text-align: center;
+}
+.next{
+    margin: 30px auto;
+    text-align: center;
+}

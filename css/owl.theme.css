@@ -51,6 +51,7 @@
 	-moz-border-radius: 20px;
 	border-radius: 20px;
 	background: #869791;
+	overflow: hidden;
 }
 
 .owl-theme .owl-controls .owl-page.active span,

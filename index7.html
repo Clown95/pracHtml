@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>jQuery幻灯片插件Owl Carousel演示-加载JSON_dowebok</title>
+<style>
+#owl-demo { width: 900px; margin-left: auto; margin-right: auto;}
+#owl-demo .items{ display: block; margin: 5px;}
+#owl-demo img { display: block; width: 100%;}
+</style>
+<link href="css/owl.carousel.css" rel="stylesheet">
+<link href="css/owl.theme.css" rel="stylesheet">
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/owl.carousel.js"></script>
+<script>
+$(function(){
+	$('#owl-demo').owlCarousel({
+        jsonPath:'json/data.json'
+
+	});
+});
+</script>
+</head>
+
+<body>
+<div class="main">
+		<!-- Demo -->
+		<div id="owl-demo" class="owl-carousel">
+		</div>
+		<!-- Demo end -->
+</div>
+</body>
+</html>

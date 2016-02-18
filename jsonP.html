@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+        // 得到天气信息查询结果后的回调函数
+        var weather_callback=function(data){
+            alert(document.body.innerHTML);//弹出指定url的body中内容
+//          alert('城市:'+data.weatherinfo.city_en+'::星期：'+data.weatherinfo.week+'::天气:'+data.weatherinfo.weather3);//弹出指定接口的数据
+        };
+        // 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）
+        var url = "http://weather.123.duba.net/static/weather_info/101121301.html?callback=weather_callback";
+        // 创建script标签，设置其属性
+        var script = document.createElement('script');
+        script.setAttribute('src', url);
+        // 把script标签加入head，此时调用开始
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+    <!--上述在添加标签时可以使用以下这种方法。-->
+    <!--<script src="http://weather.123.duba.net/static/weather_info/101121301.html?callback=weather_callback"></script>-->
+</head>
+<body>
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head lang="en">-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>JsonP解决跨域问题</title>-->
+
+    <!--&lt;!&ndash;用script标签引用SRC，页面将弹出一个提示窗口，显示跨域成功&ndash;&gt;-->
+    <!--<script type="text/javascript">-->
+        <!--var localHandler = function(data){-->
+            <!--alert('我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：' + data.result);-->
+        <!--};-->
+        <!--//        window.open('http://www.huijunet.com/fangTest.html','_blank');-->
+    <!--</script>-->
+    <!--<script type="text/javascript" src="http://www.huijunet.com/fangTest.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->

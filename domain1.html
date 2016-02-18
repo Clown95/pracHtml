@@ -1,0 +1,31 @@
+<!--JS在同一域下抓取HTML页面并解析-->
+<!--在输出时alert方式中控制输出的格式：换行alert('\n')；；document.write('<br/>')-->
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>通过javascript抓取其他页面</title>
+    <script>
+        function getValue(){
+            if(document.frames){
+                var frame02=document.frames['frame1'].document;
+                alert("我是I++E浏览器"+frame02.body.innerHTML + frame02.getElementById('cont').innerHTML + '\n' + frame02.getElementById('test').value);
+
+            }else{
+                var frame01 = document.getElementById('frame1').contentWindow.document;
+                alert("我是火狐浏览器"+frame01.body.innerHTML + frame01.getElementById('cont').innerHTML + '\n' + frame01.getElementById('test').value+'\n'+document.frames);
+            }
+//            alert(document.frames);//undefined
+        }
+    </script>
+</head>
+<body>
+    <div>这是第一页的内容。以下就是我将抓取的页面</div>
+    <input type="button" id="btn" onclick="getValue()" value="第一次抓取" >
+    <button onclick="getValue()">第二次抓取</button>
+    <br/>
+    <iframe src="domain2.html" style="width: 500px;height: 400px" name="frame1" id="frame1"></iframe>
+
+</body>
+</html>

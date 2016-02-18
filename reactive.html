@@ -1,0 +1,91 @@
+<!--响应式web设计（responsive web design）::概念、实践方式、案例、及观点讨论等：/http://www.chinaz.com/manage/2011/1121/221607.shtml/beforweb.com-->
+<!--每个客户都希望自己的网站能有一个移动设备版本，页面分辨率能兼容任何设备，为了达到这一目的，出现了响应式这一概念：-->
+<!--理念：页面的设计与开发应当根据用户行为以及设备环境(系统平台、屏幕尺寸、屏幕定向等)进行相应的响应和调整。PC端与移动端都能完美显示这一网站页面。-->
+<!--实践：由多方面组成，包括'***弹性网格***和***布局**、图片、CSS media query的使用等。页面都应该能够自动切换分辨率、图片尺寸及相关脚本功能等，以适应不同设备；换句话说，页面应该有能力去自动响应用户的设备环境。这样，我们就可以不必为不断到来的新设备做专门的版本设计和开发了。-->
+<!--概念：由，物理空间应该可以根据存在于其中的人的情况进行响应，这一“响应式建筑”，发展而来。-->
+<!--**响应式图片***这一技术需要几个文件来实现（GITHUB）：包括一个JavaScript文件(rwd-images.js)，一个.htaccess文件，以及一些范例资源文件。-->
+<!--页面布局：监测页面布局随浏览环境的不同而产生不同变化，如果变得过长或果断，则通过一个子样式表来继承住样式表，针对某些布局进行样式覆写。主样式：style.css   子样式继承：mobile.css-->
+<!--CSS3支持所有媒体类型（screen、print、handheld等），属性max-width,device-width\orientation\color-->
+<!--CSS的Media Query(媒体查询)使用-->
+<!--<link href="css/print.css" rel="stylesheet" type="text/css" media="print" />
+<link rel="stylesheet" type="text/css" media="screen and (max-device-width: 480px)" href="shetland.css/>如果以屏幕呈现，其设备宽度不超过480px,则加载shetland.css样式表
+最不同额屏幕创建不同的样式表，很实用，但是更有效的方法是：将多个media query整合在一个样式表中。模板有AndyClark创建
+    /* Smartphones (portrait and landscape) ----------- */
+
+@media only screen
+
+and (min-device-width : 320px)
+
+and (max-device-width : 480px) {
+
+/* Styles */
+
+}
+
+
+/* Smartphones (landscape) ----------- */
+
+@media only screen
+
+and (min-width : 321px) {
+
+/* Styles */
+
+}
+
+
+/* Smartphones (portrait) ----------- */
+
+@media only screen
+
+and (max-width : 320px) {
+
+/* Styles */
+
+}
+或者-->
+<!--<style type="text/css" media="screen">-->
+    <!--@import url("css/style.css");-->
+<!--</style>-->
+
+<!--上面的代码范例是CSS2.1与CSS3通吃的。现在让我们来看看怎样使用CSS3专有的media queries功能来创建响应式Web设计。-->
+<!--min-width和max-width这两个属性很靠谱.-->
+<!--@media screen and (max-width: 600px) {-->
+
+<!--.aClassforSmallScreens {-->
+
+<!--clear: both;-->
+
+<!--font-size: 1.3em;-->
+
+<!--}-->
+
+<!--}-->
+<!--使用min-device-width与max-device-width，用来判断设备本身的屏幕尺寸。-->
+<!--@media screen and (max-device-width: 480px 或者用屏幕方向判断：orientation：landscape，这个属性只在iPad上有效，iPhone用宽度控制) and(min-device-width:200px) {这是再结合使用-->
+
+<!--.classForiPhoneDisplay {-->
+
+<!--font-size: 1.2em;-->
+
+<!--}-->
+
+<!--}-->
+
+<!--（2）除此之外，Javascript也是很不错，用来进行响应式。这很实用于一些不能完美支持CSS3的media query的旧设备。可以用JS来做后备支援。现在已经有专门的JS库来帮助旧浏览器(IE 5+，Firefox 1+，Safari 2等)支持CSS3的media queries。使用方法很简单，下载css3-mediaqueries.js并在你的页面中调用它。-->
+<!--（3）Jquery来实现-->
+<!--（4）其他-->
+<!--响应式两个重要的方式：**同比例所见元素尺寸*****以及**调整页面结构布局*****-->
+<!--解决办法：显示和隐藏内容：display：none：：：但是对于页面中的文字内容信息来说，则不能简单的只从"同比缩小"和"调整布局结构"这两方面去处理。对于手机等移动设备来说，在文字内容方面，已经有了很多最佳实践方式和指导原则：简化的导航、更易聚焦的内容、以信息列表代替传统的多行文案内容等。-->
+
+<!--触屏与鼠标，，触屏技术的广泛，手的行为Click ，，所以尽量不要全部功能依赖hover来触发，这是鼠标的特性。。参考："Designing for Touchscreen"-->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>

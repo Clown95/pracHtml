@@ -1,0 +1,31 @@
+<!-- /*通过javascript获取其他域的页面的内容。写一个页面，在页面内通过javascript获取通过一个域下的页面的内容、获取百度页面的内容*/ -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>跨域获取页面内容</title>
+	<script type="text/javascript">
+	function get(){
+		// alert("nihao")用于测试
+		var framePg=document.getElementById('content');
+		alert(framePg.document.innerHTML);
+	}
+	function ajs(){
+		// 在使用Ajax之前先创建基础对象。在老版本的IE浏览器中使用ActiveX对象，variable=new ActiveXObject("Microsoft.XMLHTTP");
+		var ajsx=false;
+		ajsx=new XMLHttpRequest();
+	}
+
+	</script>
+</head>
+<body>
+	<!-- <iframe id="content" src="c:/Users/huiju/Desktop/dom.html" style="height:200px;width:200px"></iframe> -->
+	<!-- <input type="button" value="获取" onclick="get()"> -->
+	<!-- <div > -->
+
+	<!-- </div> -->
+
+	<!-- Ajax的基础是SMLHttpRequest对象，所有浏览器都支持该对象，用于在后台与服务器交换数据在不加载整个页面的情况下，对页面某个部分进行更新 -->
+	<button onclick="ajs()"></button>>
+</body>
+</html>
